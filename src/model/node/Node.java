@@ -13,9 +13,13 @@ public abstract class Node {
     private final List<Link> links;
     private final Map<String, Property<?>> properties;
 
-    public Node() {
+    public Node(HashMap<String, Property<?>> properties) {
+        this.properties = properties;
         this.links = new ArrayList<>();
-        this.properties = new HashMap<>();
+    }
+
+    public Node() {
+        this(new HashMap<>());
     }
 
     /**
@@ -26,11 +30,9 @@ public abstract class Node {
      */
     public List<Link> getLinks(Link link) {
         List<Link> links = new ArrayList<>();
-        for (Link l : this.links) {
-            if (l.equals(link)) {
+        for (Link l : this.links)
+            if (l.equals(link))
                 links.add(link);
-            }
-        }
         return links;
     }
 
@@ -40,7 +42,7 @@ public abstract class Node {
      * @param linkClass         Class           class to compare
      * @return                  List<Link>
      */
-    public List<Link> getLinks(Class linkClass) {
+    public List<Link> getLinks(Class<? extends Link> linkClass) {
         List<Link> links = new ArrayList<>();
         for (Link link : this.links) {
             if (link.getClass().equals(linkClass)) {
@@ -52,14 +54,10 @@ public abstract class Node {
 
     /**
      * Removes the node attached link passed in parameters.
-     * @param link
+     * @param link              Link            Link to remove
      */
     public void removeLink(Link link) {
-        for(Link l : this.links) {
-            if (l.equals(link)){
-                this.links.remove(this.links.indexOf(l));
-            }
-        }
+        this.links.remove(link);
     }
 
 

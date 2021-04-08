@@ -1,24 +1,30 @@
 package model.link;
 
-import model.node.Node;
+import exceptions.IllegalLinkAssociationException;
 import exceptions.NoLinkedNodeException;
 import exceptions.UninitializedLinkException;
+import model.node.Node;
 
 /**
  * Link
  */
 public abstract class Link {
     /**
-     * From
+     * Origin node
      */
     private Node from;
 
     /**
-     * To
+     * Destination node
      */
     private Node to;
 
+
+    public abstract boolean isCompatible(Node from, Node to);
+
+
     /**
+     * Get a note depending of the other extremity
      * @param other Other node
      * @return Other extremity
      * @throws UninitializedLinkException When using an uninitialized link
@@ -70,15 +76,25 @@ public abstract class Link {
 
     /**
      * @param from New origin of the link
+     * @throws IllegalLinkAssociationException Thrown when incompatible link and nodes association
      */
-    public void setFrom(Node from) {
+    public void setFrom(Node from) throws IllegalLinkAssociationException {
+        if (this.to != null && !this.isCompatible(from, this.to)) {
+            throw new IllegalLinkAssociationException("Link (" + getClass().getName() + ") is not compatible with" +
+                    "nodes from (" + from.getClass().getName() + ") and to (" + this.to.getClass().getName() + ").");
+        }
         this.from = from;
     }
 
     /**
      * @param to New origin of the link
+     * @throws IllegalLinkAssociationException Thrown when incompatible link and nodes association
      */
-    public void setTo(Node to) {
+    public void setTo(Node to) throws IllegalLinkAssociationException {
+        if (this.from != null && !this.isCompatible(this.from, to)) {
+            throw new IllegalLinkAssociationException("Link (" + getClass().getName() + ") is not compatible with" +
+                    "nodes from (" + this.from.getClass().getName() + ") and to (" + to.getClass().getName() + ").");
+        }
         this.to = to;
     }
 }

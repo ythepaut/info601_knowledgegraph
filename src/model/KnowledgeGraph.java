@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.IllegalLinkAssociationException;
 import model.link.Link;
 import model.node.Node;
 
@@ -19,7 +20,7 @@ public class KnowledgeGraph {
 
     /**
      * Adds nodes to the graph
-     * @param nodes             Node            Nodes to add
+     * @param nodes             Node[]          Nodes to add
      */
     public void addNodes(Node... nodes) {
         this.nodes.addAll(Arrays.asList(nodes));
@@ -27,7 +28,7 @@ public class KnowledgeGraph {
 
     /**
      * Removes nodes from the graph
-     * @param nodes             Node            Nodes to remove
+     * @param nodes             Node[]          Nodes to remove
      */
     public void removeNodes(Node... nodes) {
         this.nodes.removeAll(Arrays.asList(nodes));
@@ -40,9 +41,13 @@ public class KnowledgeGraph {
      * @param link              Link            Link to add
      */
     public void addLink(Node nodeFrom, Node nodeTo, Link link) {
-        link.setFrom(nodeFrom);
-        link.setTo(nodeTo);
-        addNodes(nodeFrom, nodeTo);
+        try {
+            link.setFrom(nodeFrom);
+            link.setTo(nodeTo);
+            addNodes(nodeFrom, nodeTo);
+        } catch (IllegalLinkAssociationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -88,6 +93,11 @@ public class KnowledgeGraph {
         return found;
     }
 
+
+    @Override
+    public String toString() {
+        return "Je suis un graph c:"; // TODO gl hf
+    }
 
     public List<Node> getNodes() {
         return nodes;

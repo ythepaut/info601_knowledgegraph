@@ -1,17 +1,21 @@
 package model;
 
+/**
+ * Property
+ * @param <T> Type
+ */
 public class Property<T> {
-    private T elt;
+    private T value;
 
-    public Property(T elt) {
-        this.elt = elt;
+    public Property(T value) {
+        this.value = value;
     }
 
-    public void set(T elt) {
-        this.elt = elt;
+    public void setValue(T value) {
+        this.value = value;
     }
 
-    public T get() {
-        return elt;
+    public T getValue() {
+        return value;
     }
 }

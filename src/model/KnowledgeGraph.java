@@ -23,7 +23,9 @@ public class KnowledgeGraph {
      * @param nodes             Node[]          Nodes to add
      */
     public void addNodes(Node... nodes) {
-        this.nodes.addAll(Arrays.asList(nodes));
+        for (Node node : nodes)
+            if (!this.nodes.contains(node))
+                this.nodes.add(node);
     }
 
     /**
@@ -44,6 +46,8 @@ public class KnowledgeGraph {
         try {
             link.setFrom(nodeFrom);
             link.setTo(nodeTo);
+            nodeTo.addLink(link);
+            nodeFrom.addLink(link);
             addNodes(nodeFrom, nodeTo);
         } catch (IllegalLinkAssociationException e) {
             e.printStackTrace();
@@ -96,7 +100,18 @@ public class KnowledgeGraph {
 
     @Override
     public String toString() {
-        return "Je suis un graph c:"; // TODO gl hf
+        StringBuilder res = new StringBuilder("KnowledgeGraph :\n");
+        for (Node node : this.nodes) {
+            for (Link link : node.getLinks()) {
+                if (link.getFrom().equals(node)) {
+                    res.append(node)
+                            .append(" ==> ")
+                            .append(link.getTo().toString())
+                            .append("\n");
+                }
+            }
+        }
+        return res.toString();
     }
 
     public List<Node> getNodes() {

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Node {
-
     private final List<Link> links;
     private final Map<String, Property<?>> properties;
 
@@ -22,6 +21,10 @@ public abstract class Node {
         this(new HashMap<>());
     }
 
+    public void addLink(Link link) {
+        links.add(link);
+    }
+
     /**
      * Returns all of the connected links of the node
      * which equals to the one passed in parameter.
@@ -31,7 +34,7 @@ public abstract class Node {
     public List<Link> getLinks(Link link) {
         List<Link> links = new ArrayList<>();
         for (Link l : this.links)
-            if (l.equals(link))
+            if (link.isSameLink(link))
                 links.add(link);
         return links;
     }
@@ -60,6 +63,16 @@ public abstract class Node {
         this.links.remove(link);
     }
 
+
+    @Override
+    public String toString() {
+        if (properties.get("name") != null) {
+            return (String) properties.get("name").getValue();
+        } else if (properties.get("id") != null) {
+            return "ID=" + properties.get("id").getValue();
+        }
+        return super.toString();
+    }
 
     public List<Link> getLinks() {
         return this.links;

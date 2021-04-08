@@ -19,9 +19,25 @@ public abstract class Link {
      */
     private Node to;
 
+    private final boolean oriented;
+
+    private String name;
+
+    protected Link(String name, boolean oriented) {
+        if (name == null)
+            throw new IllegalArgumentException("Link name cannot be null");
+
+        this.name = name;
+        this.oriented = oriented;
+    }
+
+    protected Link(boolean oriented) {
+        this("link", oriented);
+    }
 
     public abstract boolean isCompatible(Node from, Node to);
 
+    public abstract boolean isSameLink(Link other);
 
     /**
      * Get a note depending of the other extremity
@@ -73,6 +89,14 @@ public abstract class Link {
     public Node getTo() {
         return to;
     }
+    
+    public String getName() {
+        return name;
+    }
+
+    public boolean isOriented() {
+        return oriented;
+    }
 
     /**
      * @param from New origin of the link
@@ -80,7 +104,7 @@ public abstract class Link {
      */
     public void setFrom(Node from) throws IllegalLinkAssociationException {
         if (this.to != null && !this.isCompatible(from, this.to)) {
-            throw new IllegalLinkAssociationException("Link (" + getClass().getName() + ") is not compatible with" +
+            throw new IllegalLinkAssociationException("Link (" + getClass().getName() + ") is not compatible with " +
                     "nodes from (" + from.getClass().getName() + ") and to (" + this.to.getClass().getName() + ").");
         }
         this.from = from;
@@ -92,9 +116,21 @@ public abstract class Link {
      */
     public void setTo(Node to) throws IllegalLinkAssociationException {
         if (this.from != null && !this.isCompatible(this.from, to)) {
-            throw new IllegalLinkAssociationException("Link (" + getClass().getName() + ") is not compatible with" +
+            throw new IllegalLinkAssociationException("Link (" + getClass().getName() + ") is not compatible with " +
                     "nodes from (" + this.from.getClass().getName() + ") and to (" + to.getClass().getName() + ").");
         }
         this.to = to;
+    }
+    
+    public void setName(String name) {
+        if (name == null)
+            throw new IllegalArgumentException("Name can't be null");
+
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

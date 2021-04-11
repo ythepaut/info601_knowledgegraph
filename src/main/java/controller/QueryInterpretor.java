@@ -121,7 +121,6 @@ public class QueryInterpretor {
 
             if (firstNode.size() > 1 || secondNode.size() > 1) {
                 System.out.println("Error: arguments can be interpreted in several ways");
-                return;
             } else {
                 graph.addLink(firstNode.get(0), secondNode.get(0), link);
             }
@@ -141,7 +140,7 @@ public class QueryInterpretor {
                 "node add <NodeType> <ID> [Attribute name]:[Attribute value]",
                 "node del <ID>",
                 "link add <LinkType> [LinkProperties] <IDNode1> <IDNode2>",
-                "link del <IDNode1> <IDNode2>",
+                "link del <LinkType> <IDNode1> <IDNode2>",
                 "display",
                 "exit"
         };

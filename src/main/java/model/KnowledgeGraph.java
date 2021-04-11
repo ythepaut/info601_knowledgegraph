@@ -67,25 +67,21 @@ public class KnowledgeGraph {
      * @param linkType          Class           Link type to delete
      */
     public void removeLink(Node nodeFrom, Node nodeTo, Class<? extends Link> linkType) {
-        try {
-            List<Link> links = nodeFrom.getLinks();
-            Link myLink = null;
-            for (Link link : links) {
-                if (link.getClass() == linkType) {
-                    try {
-                        if (link.getLinkedNode(nodeFrom) == nodnodeTo) {
-                            myLink = link;
-                        }
-                    } catch (NoLinkedNodeException e) {
-                        e.printStackTrace();
+        List<Link> links = nodeFrom.getLinks();
+        Link myLink = null;
+        for (Link link : links) {
+            if (link.getClass() == linkType) {
+                try {
+                    if (link.getLinkedNode(nodeFrom) == nodeTo) {
+                        myLink = link;
                     }
+                } catch (NoLinkedNodeException e) {
+                    e.printStackTrace();
                 }
             }
-            nodeFrom.removeLink(myLink);
-            nodeTo.removeLink(myLink);
-        } catch (IllegalLinkAssociationException e) {
-            e.printStackTrace();
         }
+        nodeFrom.removeLink(myLink);
+        nodeTo.removeLink(myLink);
     }
 
     /**

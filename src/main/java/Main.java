@@ -41,6 +41,7 @@ public class Main {
 
         System.out.println(graph);
         */
+
         KnowledgeGraph graph = new KnowledgeGraph();
         QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
         queryInterpretor.queryListener();

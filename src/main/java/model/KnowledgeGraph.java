@@ -59,7 +59,7 @@ public class KnowledgeGraph {
      * Delete and adds a link to the graph
      * @param nodeFrom          Node            Link's origin node
      * @param nodeTo            Node            Link's destination node
-     * @param link              Link            Link to add
+     * @param linkType          Class           Link type to delete
      */
     public void removeLink(Node nodeFrom, Node nodeTo, Class<? extends Link> linkType) {
         try {

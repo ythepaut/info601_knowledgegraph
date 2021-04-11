@@ -93,7 +93,6 @@ public class KnowledgeGraph {
         List<Node> found = new ArrayList<>();
 
         for (Node node : nodes) {
-
             // Comparing properties
             boolean match = true;
             for (String propertyName : properties.keySet()) {
@@ -122,7 +121,7 @@ public class KnowledgeGraph {
     public List<Node> findNodes(Map<String, Property<?>> properties, Class<? extends Node> nodeType) {
         List<Node> found = new ArrayList<>();
         for (Node node : findNodes(properties))
-            if (nodeType.isInstance(node)) // FIXME: might not work, or might already be fixed
+            if (nodeType.isInstance(node))
                 found.add(node);
         return found;
     }

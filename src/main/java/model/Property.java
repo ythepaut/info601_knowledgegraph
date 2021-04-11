@@ -21,6 +21,10 @@ public class Property<T> {
 
     @Override
     public boolean equals(Object other) {
-        return value.equals(other);
+        if (other instanceof Property) {
+            return value.equals(((Property<?>) other).getValue());
+        }
+
+        return false;
     }
 }

@@ -18,4 +18,9 @@ public class Property<T> {
     public T getValue() {
         return value;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        return value.equals(other);
+    }
 }

@@ -1,9 +1,9 @@
 import model.KnowledgeGraph;
 import model.Property;
-import model.link.AkoLink;
 import model.link.InstanceLink;
 import model.node.ConceptNode;
 import model.node.InstanceNode;
+import view.GraphDisplayer;
 
 import java.util.HashMap;
 
@@ -35,8 +35,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-
         KnowledgeGraph graph = constructGraph();
+        GraphDisplayer.displayGraph(graph);
 
         System.out.println(graph);
 

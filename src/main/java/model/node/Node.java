@@ -9,10 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Node {
+    private static int NEXT_ID = 0;
+
     private final List<Link> links;
     private final Map<String, Property<?>> properties;
 
+    private final String id;
+
     public Node(HashMap<String, Property<?>> properties) {
+        this.id = Integer.toString(Node.NEXT_ID++);
         this.properties = properties;
         this.links = new ArrayList<>();
     }
@@ -68,10 +73,8 @@ public abstract class Node {
     public String toString() {
         if (properties.get("name") != null) {
             return (String) properties.get("name").getValue();
-        } else if (properties.get("id") != null) {
-            return "ID=" + properties.get("id").getValue();
         }
-        return super.toString();
+        return getId();
     }
 
     public List<Link> getLinks() {
@@ -80,5 +83,9 @@ public abstract class Node {
 
     public Map<String, Property<?>> getProperties() {
         return properties;
+    }
+
+    public String getId() {
+        return id;
     }
 }

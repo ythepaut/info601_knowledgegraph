@@ -1,0 +1,14 @@
+model/link/CompositionLink.class
+model/node/InstanceNode.class
+model/KnowledgeGraph.class
+model/node/ConceptNode.class
+model/link/AssociationLink.class
+exceptions/IllegalLinkAssociationException.class
+model/Property.class
+Main.class
+exceptions/UninitializedLinkException.class
+exceptions/NoLinkedNodeException.class
+model/link/AkoLink.class
+model/node/Node.class
+model/link/InstanceLink.class
+model/link/Link.class

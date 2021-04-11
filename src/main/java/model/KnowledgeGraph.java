@@ -105,7 +105,9 @@ public class KnowledgeGraph {
             for (Link link : node.getLinks()) {
                 if (link.getFrom().equals(node)) {
                     res.append(node)
-                            .append(" ==> ")
+                            .append(" ---[ ")
+                            .append(link.getName())
+                            .append(" ]--> ")
                             .append(link.getTo().toString())
                             .append("\n");
                 }

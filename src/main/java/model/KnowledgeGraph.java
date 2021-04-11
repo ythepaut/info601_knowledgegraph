@@ -10,14 +10,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class KnowledgeGraph {
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
 
+public class KnowledgeGraph {
     private final List<Node> nodes;
+    private final List<Link> links;
 
     public KnowledgeGraph() {
         nodes = new ArrayList<>();
+        links = new ArrayList<>();
     }
-
 
     /**
      * Adds nodes to the graph
@@ -50,6 +54,7 @@ public class KnowledgeGraph {
             nodeTo.addLink(link);
             nodeFrom.addLink(link);
             addNodes(nodeFrom, nodeTo);
+            links.add(link);
         } catch (IllegalLinkAssociationException e) {
             e.printStackTrace();
         }
@@ -126,6 +131,17 @@ public class KnowledgeGraph {
         return found;
     }
 
+    /**
+     * Find a node according to its id
+     * @param id Node ID
+     * @return Corresponding node
+     */
+    private Node findNode(String id) {
+        for (Node node : getNodes())
+            if (node.getId().equals(id))
+                return node;
+        return null;
+    }
 
     @Override
     public String toString() {
@@ -147,5 +163,58 @@ public class KnowledgeGraph {
 
     public List<Node> getNodes() {
         return nodes;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    /**
+     * @return JSON graph
+     */
+    public String toJSON() {
+        JSONObject obj = new JSONObject();
+
+        JSONArray nodes = new JSONArray();
+        for (Node node : getNodes()) {
+            nodes.put(node.toJSONObject());
+        }
+        obj.put("nodes", nodes);
+
+        JSONArray links = new JSONArray();
+        for (Link link : getLinks()) {
+            links.put(link.toJSONObject());
+        }
+        obj.put("links", links);
+
+        return obj.toString();
+    }
+
+    /**
+     * @param json JSON graph
+     * @return Graph
+     * @throws JSONException Bad JSON
+     */
+    public static KnowledgeGraph fromJSON(String json) throws JSONException {
+        KnowledgeGraph graph = new KnowledgeGraph();
+
+        JSONObject main = new JSONObject(json);
+
+        JSONArray nodes = main.getJSONArray("nodes");
+        for (Object nodeObject : nodes) {
+            Node node = Node.fromJSONObject((JSONObject) nodeObject);
+            graph.addNodes(node);
+        }
+
+        JSONArray links = main.getJSONArray("links");
+        for (Object linkObject : links) {
+            JSONObject linkJSON = (JSONObject) linkObject;
+            Link link = Link.fromJSONObject(linkJSON);
+            Node from = graph.findNode(linkJSON.getString("from"));
+            Node to = graph.findNode(linkJSON.getString("to"));
+            graph.addLink(from, to, link);
+        }
+
+        return graph;
     }
 }

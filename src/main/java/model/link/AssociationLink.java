@@ -2,10 +2,15 @@ package model.link;
 
 import model.node.InstanceNode;
 import model.node.Node;
+import org.json.JSONObject;
 
 public class AssociationLink extends Link {
     public AssociationLink(String name, boolean oriented) {
         super(name, oriented);
+    }
+
+    public AssociationLink(String name) {
+        this(name, true);
     }
 
     public AssociationLink(boolean oriented) {
@@ -13,7 +18,7 @@ public class AssociationLink extends Link {
     }
 
     public AssociationLink() {
-        this("association", false);
+        this("association", true);
     }
 
     @Override
@@ -28,5 +33,12 @@ public class AssociationLink extends Link {
         }
 
         return false;
+    }
+
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject obj = super.toJSONObject();
+        obj.put("type", "ASSOCIATION");
+        return obj;
     }
 }

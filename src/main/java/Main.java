@@ -1,3 +1,4 @@
+import controller.QueryInterpretor;
 import model.KnowledgeGraph;
 import model.Property;
 import model.link.InstanceLink;
@@ -35,11 +36,15 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        /*
         KnowledgeGraph graph = constructGraph();
         GraphDisplayer.displayGraph(graph);
 
         System.out.println(graph);
-
+        */
+        KnowledgeGraph graph = new KnowledgeGraph();
+        QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
+        queryInterpretor.queryListener();
     }
 
 }

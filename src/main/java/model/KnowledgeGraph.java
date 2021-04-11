@@ -1,6 +1,7 @@
 package model;
 
 import exceptions.IllegalLinkAssociationException;
+import exceptions.NoLinkedNodeException;
 import model.link.Link;
 import model.node.Node;
 
@@ -49,6 +50,34 @@ public class KnowledgeGraph {
             nodeTo.addLink(link);
             nodeFrom.addLink(link);
             addNodes(nodeFrom, nodeTo);
+        } catch (IllegalLinkAssociationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Delete and adds a link to the graph
+     * @param nodeFrom          Node            Link's origin node
+     * @param nodeTo            Node            Link's destination node
+     * @param link              Link            Link to add
+     */
+    public void removeLink(Node nodeFrom, Node nodeTo, Class<? extends Link> linkType) {
+        try {
+            List<Link> links = nodeFrom.getLinks();
+            Link myLink = null;
+            for (Link link : links) {
+                if (link.getClass() == linkType) {
+                    try {
+                        if (link.getLinkedNode(nodeFrom) == nodnodeTo) {
+                            myLink = link;
+                        }
+                    } catch (NoLinkedNodeException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            nodeFrom.removeLink(myLink);
+            nodeTo.removeLink(myLink);
         } catch (IllegalLinkAssociationException e) {
             e.printStackTrace();
         }

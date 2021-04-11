@@ -6,22 +6,21 @@ import model.node.InstanceNode;
 import view.GraphDisplayer;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
-
     private static KnowledgeGraph constructGraph() {
-
         KnowledgeGraph graph = new KnowledgeGraph();
 
         // Antalgic
-        HashMap<String, Property<?>> propsAntalgic = new HashMap<>();
+        Map<String, Property<?>> propsAntalgic = new HashMap<>();
         Property<String> name = new Property<>("Antalgique");
         propsAntalgic.put("name", name);
         ConceptNode antalgic = new ConceptNode(propsAntalgic);
         graph.addNodes(antalgic);
 
-        // Douliprane
-        HashMap<String, Property<?>> propsDoliprane = new HashMap<>();
+        // Doliprane
+        Map<String, Property<?>> propsDoliprane = new HashMap<>();
         name = new Property<>("Doliprane");
         propsDoliprane.put("name", name);
         InstanceNode doliprane = new InstanceNode(propsDoliprane);
@@ -38,8 +37,7 @@ public class Main {
         KnowledgeGraph graph = constructGraph();
         GraphDisplayer.displayGraph(graph);
 
-        System.out.println(graph);
-
+        System.out.println(graph.toJSON());
+        System.out.println(KnowledgeGraph.fromJSON(graph.toJSON()));
     }
-
 }

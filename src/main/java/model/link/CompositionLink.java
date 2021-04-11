@@ -2,11 +2,23 @@ package model.link;
 
 import model.node.ConceptNode;
 import model.node.Node;
+import org.json.JSONObject;
 
 public class CompositionLink extends Link {
+    public CompositionLink(String name, boolean oriented) {
+        super(name, oriented);
+    }
+
+    public CompositionLink(String name) {
+        this(name, true);
+    }
 
     public CompositionLink(boolean oriented) {
-        super("Composition", oriented);
+        this("composition", oriented);
+    }
+
+    public CompositionLink() {
+        this("composition", true);
     }
 
     @Override
@@ -21,5 +33,12 @@ public class CompositionLink extends Link {
         }
 
         return false;
+    }
+
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject obj = super.toJSONObject();
+        obj.put("type", "COMPOSITION");
+        return obj;
     }
 }

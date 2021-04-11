@@ -4,6 +4,8 @@ import exceptions.IllegalLinkAssociationException;
 import exceptions.NoLinkedNodeException;
 import exceptions.UninitializedLinkException;
 import model.node.Node;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Link
@@ -19,8 +21,14 @@ public abstract class Link {
      */
     private Node to;
 
+    /**
+     * Oriented
+     */
     private final boolean oriented;
 
+    /**
+     * Link name
+     */
     private String name;
 
     protected Link(String name, boolean oriented) {
@@ -132,5 +140,44 @@ public abstract class Link {
     @Override
     public String toString() {
         return name;
+    }
+
+    /**
+     * @return Link to JSON object conversion
+     */
+    public JSONObject toJSONObject() {
+        JSONObject obj = new JSONObject();
+        obj.put("from", from.getId());
+        obj.put("to", to.getId());
+        obj.put("name", name);
+        obj.put("oriented", oriented);
+        return obj;
+    }
+
+    /**
+     * @param obj JSON object
+     * @return Link from JSON object
+     * @throws JSONException Bad JSON
+     */
+    public static Link fromJSONObject(JSONObject obj) throws JSONException {
+        String name = obj.getString("name");
+        boolean oriented = obj.getBoolean("oriented");
+
+        switch (obj.getString("type")) {
+            case "AKO":
+                return new AkoLink();
+
+            case "ASSOCIATION":
+                return new AssociationLink(name, oriented);
+
+            case "COMPOSITION":
+                return new CompositionLink(name, oriented);
+
+            case "INSTANCE":
+                return new InstanceLink();
+
+            default:
+                throw new JSONException("Invalid type");
+        }
     }
 }

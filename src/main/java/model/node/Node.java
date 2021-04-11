@@ -2,13 +2,21 @@ package model.node;
 
 import model.Property;
 import model.link.Link;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Node
+ */
 public abstract class Node {
+    /**
+     * Next free ID
+     */
     private static int NEXT_ID = 0;
 
     private final List<Link> links;
@@ -16,8 +24,14 @@ public abstract class Node {
 
     private final String id;
 
-    public Node(HashMap<String, Property<?>> properties) {
+    public Node(Map<String, Property<?>> properties) {
         this.id = Integer.toString(Node.NEXT_ID++);
+        this.properties = properties;
+        this.links = new ArrayList<>();
+    }
+
+    public Node(Map<String, Property<?>> properties, String id) {
+        this.id = id;
         this.properties = properties;
         this.links = new ArrayList<>();
     }
@@ -87,5 +101,52 @@ public abstract class Node {
 
     public String getId() {
         return id;
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject obj = new JSONObject();
+        JSONObject content = new JSONObject();
+
+        for (String key : properties.keySet()) {
+            content.put(key, properties.get(key).getValue());
+        }
+
+        obj.put("id", getId());
+        obj.put("type", JSONObject.NULL);
+        obj.put("content", content);
+        return obj;
+    }
+
+    /**
+     * @param obj JSON object
+     * @return Node from JSON object
+     * @throws JSONException Bad JSON
+     */
+    public static Node fromJSONObject(JSONObject obj) throws JSONException {
+        Map<String, Property<?>> properties = getPropertiesFromJSON(obj.getJSONObject("content"));
+        String id = obj.getString("id");
+
+        switch (obj.getString("type")) {
+            case "CONCEPT":
+                return new ConceptNode(properties, id);
+
+            case "INSTANCE":
+                return new InstanceNode(properties, id);
+
+            default:
+                throw new JSONException("Invalid type");
+        }
+    }
+
+    /**
+     * @param content JSON object
+     * @return Map
+     */
+    protected static Map<String, Property<?>> getPropertiesFromJSON(JSONObject content) {
+        Map<String, Property<?>> properties = new HashMap<>();
+        for (String key : content.keySet()) {
+            properties.put(key, new Property<>(content.get(key)));
+        }
+        return properties;
     }
 }

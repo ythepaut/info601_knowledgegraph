@@ -3,9 +3,9 @@ package model.link;
 import model.node.ConceptNode;
 import model.node.InstanceNode;
 import model.node.Node;
+import org.json.JSONObject;
 
 public class InstanceLink extends Link {
-
     public InstanceLink() {
         super("instance", true);
     }
@@ -19,5 +19,12 @@ public class InstanceLink extends Link {
     @Override
     public boolean isSameLink(Link other) {
         return other instanceof InstanceLink;
+    }
+
+    @Override
+    public JSONObject toJSONObject() {
+        JSONObject obj = super.toJSONObject();
+        obj.put("type", "INSTANCE");
+        return obj;
     }
 }

@@ -94,11 +94,11 @@ public class KnowledgeGraph {
 
         for (Node node : nodes) {
             // Comparing properties
-            boolean match = false;
+            boolean match = true;
             for (String propertyName : properties.keySet()) {
                 if (node.getProperties().get(propertyName) == null ||
                         !node.getProperties().get(propertyName).equals(properties.get(propertyName))) {
-                    match = true;
+                    match = false;
                     break;
                 }
             }

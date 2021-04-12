@@ -2,14 +2,19 @@ package controller;
 
 import model.KnowledgeGraph;
 import model.Property;
-import model.node.*;
-import model.link.*;
-import scala.collection.mutable.HashMap$;
+import model.link.AssociationLink;
+import model.link.CompositionLink;
+import model.link.InstanceLink;
+import model.link.Link;
+import model.node.ConceptNode;
+import model.node.InstanceNode;
+import model.node.Node;
 import view.GraphDisplayer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;

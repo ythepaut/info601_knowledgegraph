@@ -26,38 +26,49 @@ public class Main {
         Map<String, Property<?>> propsDoliprane = new HashMap<>();
         name = new Property<>("Doliprane");
         propsDoliprane.put("name", name);
+        propsDoliprane.put("proprete", new Property<>(1));
+        propsDoliprane.put("quantite", new Property<>(90));
         InstanceNode doliprane = new InstanceNode(propsDoliprane);
         graph.addNodes(doliprane);
+
+        // Médoc
+        Map<String, Property<?>> propsMedoc = new HashMap<>();
+        name = new Property<>("Medoc");
+        propsMedoc.put("name", name);
+        InstanceNode medoc = new InstanceNode(propsMedoc);
+        graph.addNodes(medoc);
 
         // Antalgic ako Doliprane
         InstanceLink linkAntalgicDoliprane = new InstanceLink();
         graph.addLink(antalgic, doliprane, linkAntalgicDoliprane);
+
+        // Antalgic ako Médoc
+        InstanceLink linkAntalgicMedoc = new InstanceLink();
+        graph.addLink(antalgic, medoc, linkAntalgicMedoc);
 
         return graph;
     }
 
     public static void main(String[] args) {
 
-        /*
         KnowledgeGraph hardcodeGraph = constructGraph();
-        GraphDisplayer.displayGraph(hardcodeGraph);
+        // GraphDisplayer.displayGraph(hardcodeGraph);
 
         System.out.println(hardcodeGraph);
 
-        */
+        // KnowledgeGraph graph = new KnowledgeGraph();
+        // QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
+        // queryInterpretor.queryListener();
 
-        KnowledgeGraph graph = new KnowledgeGraph();
-        QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
-        queryInterpretor.queryListener();
 
-        /*
         Map<String, Property<?>> queryProperties = new HashMap<>();
-        Property<String> name = new Property<>("Doliprane");
-        queryProperties.put("name", name);
-        List<Node> list = graph.findNodes(queryProperties);
+        queryProperties.put("name", new Property<>("Doliprane"));
+        queryProperties.put("proprete", new Property<>(1));
+        queryProperties.put("quantite", new Property<>(90));
+        List<Node> list = hardcodeGraph.findNodes(queryProperties);
         for(Node result : list) {
             System.out.println(result.toString());
         }
-        */
+
     }
 }

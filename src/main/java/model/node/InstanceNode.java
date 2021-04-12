@@ -10,7 +10,7 @@ public class InstanceNode extends Node {
         super(properties);
     }
 
-    protected InstanceNode(Map<String, Property<?>> properties, String id) {
+    public InstanceNode(Map<String, Property<?>> properties, String id) {
         super(properties, id);
     }
 

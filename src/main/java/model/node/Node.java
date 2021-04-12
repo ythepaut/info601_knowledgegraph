@@ -149,4 +149,12 @@ public abstract class Node {
         }
         return properties;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Node)
+            return id.equals(((Node) other).id);
+
+        return false;
+    }
 }

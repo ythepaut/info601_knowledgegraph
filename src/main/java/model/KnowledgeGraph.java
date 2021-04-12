@@ -94,11 +94,11 @@ public class KnowledgeGraph {
 
         for (Node node : nodes) {
             // Comparing properties
-            boolean match = true;
+            boolean match = false;
             for (String propertyName : properties.keySet()) {
                 if (node.getProperties().get(propertyName) == null ||
                         !node.getProperties().get(propertyName).equals(properties.get(propertyName))) {
-                    match = false;
+                    match = true;
                     break;
                 }
             }
@@ -131,7 +131,7 @@ public class KnowledgeGraph {
      * @param id Node ID
      * @return Corresponding node
      */
-    private Node findNode(String id) {
+    public Node findNode(String id) {
         for (Node node : getNodes())
             if (node.getId().equals(id))
                 return node;

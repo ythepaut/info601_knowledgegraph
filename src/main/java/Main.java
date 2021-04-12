@@ -56,19 +56,19 @@ public class Main {
 
         System.out.println(hardcodeGraph);
 
-        // KnowledgeGraph graph = new KnowledgeGraph();
-        // QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
-        // queryInterpretor.queryListener();
+        KnowledgeGraph graph = new KnowledgeGraph();
+        QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
+        queryInterpretor.queryListener();
 
 
-        Map<String, Property<?>> queryProperties = new HashMap<>();
+        /*Map<String, Property<?>> queryProperties = new HashMap<>();
         queryProperties.put("name", new Property<>("Doliprane"));
         queryProperties.put("proprete", new Property<>(1));
         queryProperties.put("quantite", new Property<>(90));
         List<Node> list = hardcodeGraph.findNodes(queryProperties);
         for(Node result : list) {
             System.out.println(result.toString());
-        }
+        }*/
 
     }
 }

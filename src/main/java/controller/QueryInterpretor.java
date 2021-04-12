@@ -4,11 +4,13 @@ import model.KnowledgeGraph;
 import model.Property;
 import model.node.*;
 import model.link.*;
+import scala.collection.mutable.HashMap$;
 import view.GraphDisplayer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -55,16 +57,9 @@ public class QueryInterpretor {
             printHelp();
         } else if (cmd.equals("node") && args[0].equals("add") && !args[1].equals("")) {
             HashMap<String, Property<?>> properties = new HashMap<>();
-            for (int i = 2; i < args.length - 1; i += 2) {
-                if (i == 2) {
-                    properties.put("id", new Property<>(args[i]));
-                } else {
-                    properties.put(args[i], new Property<>(args[i + 1]));
-                }
-            }
+            getNextProperties(properties, args, 2);
 
-            Node node = null;
-
+            Node node;
             if (args[1].equalsIgnoreCase("concept")) {
                 node = new ConceptNode(properties);
             } else if (args[1].equalsIgnoreCase("instance")) {
@@ -78,14 +73,22 @@ public class QueryInterpretor {
             System.out.println("Successfully created node " + node);
         } else if (cmd.equals("node") && args[0].equals("del")) {
             HashMap<String, Property<?>> properties = new HashMap<>();
-            properties.put("id", new Property<>(args[1]));
-            /*for (int i = 2; i < args.length - 1; i += 2) {
-                properties.put(args[i], new Property<>(args[i + 1]));
-            }*/
+            List<Node> nodes = new ArrayList<Node>();
 
-            List<Node> nodes = graph.findNodes(properties, Node.class);
-            for (Node node : nodes) {
-                graph.removeNodes(node);
+            if (args[1].split(":").length > 0) {
+                nodes.add(graph.findNode(args[1]));
+            } else {
+                getNextProperties(properties, args, 2);
+                nodes = graph.findNodes(properties, Node.class);
+            }
+
+            if (nodes.size() > 0 && nodes.get(0) != null) {
+                for (Node node : nodes) {
+                    graph.removeNodes(node);
+                }
+            } else {
+                System.out.println("Error: no suitable nodes found " + nodes.size());
+                return;
             }
 
             System.out.println("Deleted " + nodes.size() + " node(s).");
@@ -112,17 +115,15 @@ public class QueryInterpretor {
                 System.out.println("Error: no valid TypeLink specified");
                 return;
             }
-            HashMap<String, Property<?>> properties = new HashMap<>();
-            properties.put("id", new Property<>(args[nodeIdIndex]));
-            List<Node> firstNode = graph.findNodes(properties);
-            properties = new HashMap<>();
-            properties.put("id", new Property<>(args[nodeIdIndex+1]));
-            List<Node> secondNode = graph.findNodes(properties);
 
-            if (firstNode.size() > 1 || secondNode.size() > 1) {
-                System.out.println("Error: arguments can be interpreted in several ways");
+            Node firstNode = graph.findNode(args[nodeIdIndex]);
+            Node secondNode = graph.findNode(args[nodeIdIndex+1]);
+
+            if (firstNode != null || secondNode != null) {
+                System.out.println("Error: no corresponding nodes found");
             } else {
-                graph.addLink(firstNode.get(0), secondNode.get(0), link);
+                System.out.println("Error: success adding link between " + firstNode + " " + secondNode);
+                graph.addLink(firstNode, secondNode, link);
             }
 
         } else if (cmd.equals("link") && args[0].equals("del")) {
@@ -132,15 +133,41 @@ public class QueryInterpretor {
         }
     }
 
+    private static void getNextProperties(HashMap<String, Property<?>> base, String[] args, int basePointer) {
+        HashMap<String, Property<?>> toAdd = getNextProperties(args, basePointer);
+        for (int i = 0; i < toAdd.keySet().size(); ++i) {
+            base.put((String) toAdd.keySet().toArray()[i], (Property) toAdd.values().toArray()[i]);
+        }
+    }
+
+    private static HashMap<String, Property<?>> getNextProperties (String[] args, int basePointer) {
+        if (args.length <= basePointer) {
+            return null;
+        }
+
+        HashMap<String, Property<?>> res = new HashMap<>();
+
+        for (int i = basePointer; i < args.length; ++i) {
+            String[] parsedString = args[i].split(":");
+            if (parsedString.length != 2) {
+                System.out.println("Error: bad query arguments");
+            }
+            res.put(parsedString[0], new Property<>(parsedString[1]));
+        }
+
+        return res;
+    }
+
     private static void printHelp() {
         String[] helpString = {
                 "Aide commandes :",
                 "",
                 "help",
-                "node add <NodeType> <ID> [Attribute name]:[Attribute value]",
-                "node del <ID>",
-                "link add <LinkType> [LinkProperties] <IDNode1> <IDNode2>",
-                "link del <LinkType> <IDNode1> <IDNode2>",
+                "node add <NodeType> [Attribute name]:[Attribute value]",
+                "node del <ID> | [Attribute name]:[Attribute value]",
+                "node find <ID> | [Attribute name]:[Attribute value]",
+                "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkProperties]",
+                "link del <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkProperties]",
                 "display",
                 "exit"
         };

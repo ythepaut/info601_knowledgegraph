@@ -10,7 +10,7 @@ public class ConceptNode extends Node {
         super(properties);
     }
 
-    public ConceptNode(Map<String, Property<?>> properties, String id) {
+    protected ConceptNode(Map<String, Property<?>> properties, String id) {
         super(properties, id);
     }
 

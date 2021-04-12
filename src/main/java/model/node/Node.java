@@ -27,12 +27,14 @@ public abstract class Node {
     public Node(Map<String, Property<?>> properties) {
         this.id = Integer.toString(Node.NEXT_ID++);
         this.properties = properties;
+        this.properties.put("id", new Property<>(this.id));
         this.links = new ArrayList<>();
     }
 
     public Node(Map<String, Property<?>> properties, String id) {
         this.id = id;
         this.properties = properties;
+        this.properties.put("id", new Property<>(this.id));
         this.links = new ArrayList<>();
     }
 

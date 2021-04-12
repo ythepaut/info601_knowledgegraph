@@ -99,6 +99,18 @@ public abstract class Node {
         return "#" + getId();
     }
 
+    public String toDetailedString() {
+        String res = "";
+
+        Object[] keys = this.properties.keySet().toArray();
+        Object[] values = this.properties.values().toArray();
+        for (int i = 0; i < keys.length; ++i) {
+            res += keys[i] + " : " + ((Property) values[i]).getValue() + "\n";
+        }
+
+        return res;
+    }
+
     public List<Link> getLinks() {
         return this.links;
     }

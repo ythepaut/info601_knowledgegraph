@@ -92,11 +92,26 @@ public class QueryInterpretor {
             }
 
             System.out.println("Deleted " + nodes.size() + " node(s).");
+        } else if (cmd.equals("node") && args[0].equals("find")) {
+            HashMap<String, Property<?>> properties = new HashMap<>();
+            getNextProperties(properties, args, 1);
+
+            List<Node> nodes = graph.findNodes(properties);
+
+            if (nodes != null && nodes.size() > 0) {
+                System.out.println("Corresponding Nodes\n===================");
+                for (int i = 0; i < nodes.size(); i++) {
+                    System.out.print(nodes.get(i).toDetailedString());
+                    System.out.println("===================");
+                }
+            } else {
+                System.out.println("Error: no corresponding node found");
+            }
         } else if (cmd.equals("link") && args[0].equals("add")) {
             int nodeIdIndex = 2;
-            Link link;
+            Link link = null;
             if (args[1].equalsIgnoreCase("ako")) {
-                link = new AssociationLink();
+                link = new AkoLink();
             } else if (args[1].equalsIgnoreCase("association")) {
                 link = new AssociationLink();
             } else if (args[1].equalsIgnoreCase("composition")) {
@@ -119,10 +134,10 @@ public class QueryInterpretor {
             Node firstNode = graph.findNode(args[nodeIdIndex]);
             Node secondNode = graph.findNode(args[nodeIdIndex+1]);
 
-            if (firstNode != null || secondNode != null) {
+            if (firstNode == null || secondNode == null) {
                 System.out.println("Error: no corresponding nodes found");
             } else {
-                System.out.println("Error: success adding link between " + firstNode + " " + secondNode);
+                System.out.println("Success adding link between " + firstNode + " " + secondNode);
                 graph.addLink(firstNode, secondNode, link);
             }
 
@@ -130,6 +145,8 @@ public class QueryInterpretor {
 
         } else if (cmd.equals("display")) {
             GraphDisplayer.displayGraph(graph);
+        } else {
+            System.out.println("Error: no suitable command found");
         }
     }
 

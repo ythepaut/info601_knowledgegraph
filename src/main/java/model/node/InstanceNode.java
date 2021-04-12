@@ -16,7 +16,7 @@ public class InstanceNode extends Node {
 
     @Override
     public String getName() {
-        return "Instance";
+        return "instance";
     }
 
     @Override

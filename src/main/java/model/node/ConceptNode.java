@@ -16,7 +16,7 @@ public class ConceptNode extends Node {
 
     @Override
     public String getName() {
-        return "Concept";
+        return "concept";
     }
 
     @Override

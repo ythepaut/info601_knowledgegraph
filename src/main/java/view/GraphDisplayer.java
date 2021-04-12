@@ -3,6 +3,7 @@ package view;
 import model.KnowledgeGraph;
 import model.link.Link;
 import model.node.Node;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
@@ -56,7 +57,8 @@ public class GraphDisplayer {
                 if (link.getFrom().equals(node)) {
                     Node from = link.getFrom();
                     Node to = link.getTo();
-                    result.addEdge(from.getId() + "-" + to.getId(), resultNodes.get(from.getId()), resultNodes.get(to.getId()));
+                    Edge edge = result.addEdge(from.getId() + "-" + to.getId(), resultNodes.get(from.getId()), resultNodes.get(to.getId()));
+                    edge.setAttribute("ui.class", link.getName());
                 }
             }
         }
@@ -65,22 +67,28 @@ public class GraphDisplayer {
     }
 
     private static String getCSS() {
-        String nodeCSS = "node {" +
-                "text-background-mode: plain;" +
-                "text-alignment: at-right;" +
-                "size: 30px;" +
+        String nodeCSS = "" +
+                "node {" +
+                "   text-background-mode: plain;" +
+                "   text-alignment: at-right;" +
+                "   size: 30px;" +
                 "}" +
                 "" +
-                "node.Concept {" +
-                "fill-color: rgba(255,0,0,128);" +
+                "node.concept {" +
+                "   fill-color: rgba(255,0,0,128);" +
                 "}" +
                 "" +
-                "node.Instance {" +
-                "fill-color: rgba(0,0,255,128);" +
+                "node.instance {" +
+                "   fill-color: rgba(0,0,255,128);" +
                 "}";
 
-        String edgeCSS = "edge {" +
-                "arrow-shape: arrow;" +
+        String edgeCSS = "" +
+                "edge {" +
+                "   arrow-shape: arrow;" +
+                "}" +
+                "" +
+                "edge.instance {" + // TODO: untested
+                "   stroke-mode: dashes;" +
                 "}";
 
         return nodeCSS + edgeCSS;

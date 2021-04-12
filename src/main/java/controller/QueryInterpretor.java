@@ -63,7 +63,7 @@ public class QueryInterpretor {
                 }
             }
 
-            Node node = null;
+            Node node;
 
             if (args[1].equalsIgnoreCase("concept")) {
                 node = new ConceptNode(properties);

@@ -75,10 +75,10 @@ public class QueryInterpretor {
             HashMap<String, Property<?>> properties = new HashMap<>();
             List<Node> nodes = new ArrayList<Node>();
 
-            if (args[1].split(":").length > 0) {
+            if (args[1].split(":").length != 2) {
                 nodes.add(graph.findNode(args[1]));
             } else {
-                getNextProperties(properties, args, 2);
+                getNextProperties(properties, args, 1);
                 nodes = graph.findNodes(properties, Node.class);
             }
 
@@ -135,8 +135,10 @@ public class QueryInterpretor {
 
     private static void getNextProperties(HashMap<String, Property<?>> base, String[] args, int basePointer) {
         HashMap<String, Property<?>> toAdd = getNextProperties(args, basePointer);
-        for (int i = 0; i < toAdd.keySet().size(); ++i) {
-            base.put((String) toAdd.keySet().toArray()[i], (Property) toAdd.values().toArray()[i]);
+        if (toAdd != null) {
+            for (int i = 0; i < toAdd.size(); ++i) {
+                base.put((String) toAdd.keySet().toArray()[i], (Property) toAdd.values().toArray()[i]);
+            }
         }
     }
 

@@ -15,6 +15,11 @@ public class InstanceNode extends Node {
     }
 
     @Override
+    public String getName() {
+        return "Instance";
+    }
+
+    @Override
     public JSONObject toJSONObject() {
         JSONObject obj = super.toJSONObject();
         obj.put("type", "INSTANCE");

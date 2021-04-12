@@ -29,6 +29,7 @@ public class GraphDisplayer {
             viewer.getDefaultView().close(viewer.getGraphicGraph());
         }
 
+        convertedGraph.setAttribute("ui.stylesheet", getCSS());
         viewer = convertedGraph.display();
     }
 
@@ -46,6 +47,7 @@ public class GraphDisplayer {
         for (Node node : graph.getNodes()) {
             org.graphstream.graph.Node resultNode = result.addNode(node.getId());
             resultNode.setAttribute("ui.label", node.toString());
+            resultNode.setAttribute("ui.class", node.getName());
             resultNodes.put(node.getId(), resultNode);
         }
 
@@ -63,8 +65,24 @@ public class GraphDisplayer {
     }
 
     private static String getCSS() {
-        return "node {" +
+        String nodeCSS = "node {" +
                 "text-background-mode: plain;" +
+                "text-alignment: at-right;" +
+                "size: 30px;" +
+                "}" +
+                "" +
+                "node.Concept {" +
+                "fill-color: rgba(255,0,0,128);" +
+                "}" +
+                "" +
+                "node.Instance {" +
+                "fill-color: rgba(0,0,255,128);" +
                 "}";
+
+        String edgeCSS = "edge {" +
+                "arrow-shape: arrow;" +
+                "}";
+
+        return nodeCSS + edgeCSS;
     }
 }

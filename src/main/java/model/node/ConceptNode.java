@@ -15,6 +15,11 @@ public class ConceptNode extends Node {
     }
 
     @Override
+    public String getName() {
+        return "Concept";
+    }
+
+    @Override
     public JSONObject toJSONObject() {
         JSONObject obj = super.toJSONObject();
         obj.put("type", "CONCEPT");

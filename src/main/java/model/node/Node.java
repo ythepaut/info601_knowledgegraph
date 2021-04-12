@@ -45,6 +45,12 @@ public abstract class Node {
     }
 
     /**
+     * Gets the node type name (i.e. Concept, Instance)
+     * @return                                  Node tpye name
+     */
+    public abstract String getName();
+
+    /**
      * Returns all of the connected links of the node
      * which equals to the one passed in parameter.
      * @param link              Link            link to compare
@@ -88,7 +94,7 @@ public abstract class Node {
         if (properties.get("name") != null) {
             return (String) properties.get("name").getValue();
         }
-        return getId();
+        return "#" + getId();
     }
 
     public List<Link> getLinks() {

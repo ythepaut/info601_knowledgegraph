@@ -157,6 +157,21 @@ public abstract class Link {
         return name;
     }
 
+    public String toDetailedString(Node from) {
+        String res = "";
+
+        if (from != null) {
+            res += "name : " + name;
+            try {
+                res += " to : " + getLinkedNode(from).getId();
+            } catch (NoLinkedNodeException e) {}
+        } else {
+            res += "from : " + this.from.getId() + " name : " + name + "to : " + this.to.getId();
+        }
+
+        return res;
+    }
+
     /**
      * @return Link to JSON object conversion
      */

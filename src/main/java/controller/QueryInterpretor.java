@@ -6,6 +6,7 @@ import model.Property;
 import model.node.*;
 import model.link.*;
 import scala.collection.mutable.HashMap$;
+import utils.FileManager;
 import view.GraphDisplayer;
 
 import java.io.BufferedReader;
@@ -75,6 +76,8 @@ public class QueryInterpretor {
             addLink(args);
         } else if (cmd.equals("link") && args.length > 0 && args[0].equals("del")) {
             deleteLink(args);
+        } else if (cmd.equals("link") && args.length > 0 && args[0].equals("list")) {
+            linkList();
         } else if (cmd.equals("qg")) {
             switchGraph();
         } else if (cmd.equals("findQuery")) {
@@ -302,6 +305,14 @@ public class QueryInterpretor {
         }
     }
 
+    private void linkList() {
+        System.out.println("All Links\n===================");
+        for (Link link : graph.getLinks()) {
+            System.out.println(link.toDetailedString(null));
+            System.out.println("===================");
+        }
+    }
+
     private void exportGraph(String[] args) {
         if (args.length == 2) {
             try {
@@ -343,6 +354,7 @@ public class QueryInterpretor {
                 } else {
 
                 }
+                properties.remove(key, properties.get(key));
             }
         }
     }
@@ -358,6 +370,7 @@ public class QueryInterpretor {
             String[] parsedString = args[i].split(":");
             if (parsedString.length != 2) {
                 System.out.println("Error: bad query arguments");
+                return null;
             }
             res.put(parsedString[0], new Property<>(parsedString[1]));
         }
@@ -376,6 +389,7 @@ public class QueryInterpretor {
                 "node list",
                 "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "link del <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
+                "link list",
                 "qg",
                 "find",
                 "clear",

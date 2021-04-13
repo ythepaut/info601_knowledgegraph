@@ -128,6 +128,11 @@ public abstract class Node {
             res.append(keys[i]).append(" : ").append(((Property<?>) values[i]).getValue()).append("\n");
         }
 
+        res.append("Links:\n");
+        for (Link link : getLinks()) {
+            res.append(link.toDetailedString(this) + "\n");
+        }
+
         return res.toString();
     }
 

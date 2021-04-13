@@ -12,20 +12,6 @@
             "type": "INSTANCE",
             "search": true,
             "content": {}
-        },
-        {
-            "id": "52",
-            "type": "INSTANCE",
-            "content": {
-                "name": "toux sèche"
-            }
-        },
-        {
-            "id": "53",
-            "type": "CONCEPT",
-            "content": {
-                "name": "Symptôme"
-            }
         }
     ],
     "links": [
@@ -35,20 +21,6 @@
             "to": "51",
             "oriented": true,
             "type": "INSTANCE"
-        },
-        {
-            "name": "instance",
-            "from": "53",
-            "to": "52",
-            "oriented": true,
-            "type": "INSTANCE"
-        },
-        {
-            "name": "has",
-            "from": "51",
-            "to": "52",
-            "oriented": true,
-            "type": "ASSOCIATION"
         }
     ]
 }

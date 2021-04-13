@@ -104,6 +104,8 @@ public abstract class Node {
     public String toDetailedString() {
         StringBuilder res = new StringBuilder();
 
+        res.append("id : " + this.id + "\n");
+
         Object[] keys = this.properties.keySet().toArray();
         Object[] values = this.properties.values().toArray();
         for (int i = 0; i < keys.length; ++i) {

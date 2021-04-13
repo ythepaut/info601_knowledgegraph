@@ -62,6 +62,8 @@ public class QueryInterpretor {
             deleteNode(args);
         } else if (cmd.equals("node") && args[0].equals("find")) {
             findNode(args);
+        } else if (cmd.equals("node") && args[0].equals("list")) {
+            listNode();
         } else if (cmd.equals("link") && args[0].equals("add")) {
             addLink(args);
         } else if (cmd.equals("link") && args[0].equals("del")) {
@@ -132,6 +134,14 @@ public class QueryInterpretor {
             }
         } else {
             System.out.println("Error: no corresponding node found");
+        }
+    }
+
+    private void listNode() {
+        System.out.println("All Nodes\n===================");
+        for (Node node : graph.getNodes()) {
+            System.out.print(node.toDetailedString());
+            System.out.println("===================");
         }
     }
 
@@ -279,6 +289,7 @@ public class QueryInterpretor {
                 "node add <NodeType> [Attribute name]:[Attribute value]",
                 "node del <ID> [Attribute1 name]:[Attribute1 value] [Attribute2 name]:[Attribute2 value]...",
                 "node find <ID> [Attribute1 name]:[Attribute1 value] [Attribute2 name]:[Attribute2 value]...",
+                "node list",
                 "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "link del <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "find ",

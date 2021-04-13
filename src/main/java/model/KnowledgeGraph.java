@@ -267,17 +267,6 @@ public class KnowledgeGraph {
         return graph;
     }
 
-    public static KnowledgeGraph fromFile(String path) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(path));
-        String currentLine;
-        StringBuilder total = new StringBuilder();
-        while ((currentLine = reader.readLine()) != null) {
-            total.append(currentLine);
-        }
-
-        return KnowledgeGraph.fromJSON(total.toString());
-    }
-
     public KnowledgeGraph search(KnowledgeGraph searchedGraph) {
         KnowledgeGraph resultGraph = new KnowledgeGraph();
 
@@ -321,7 +310,26 @@ public class KnowledgeGraph {
         return KnowledgeGraph.fromJSON(resultGraph.toJSON());
     }
 
-    public KnowledgeGraph path(Node origin, Node destination) {
-        return new KnowledgeGraph();
+    /**
+     * Depth-First Search
+     * @param origin        Node from which we start
+     * @param occurred      Nodes we already ran through
+     */
+    List<Node> dfs(Node origin, Node destination, List<Node> occurred) {
+
+        if (origin.equals(destination))
+            return occurred;
+
+        if (occurred == null)
+            occurred = new ArrayList<>();
+        occurred.add(origin);
+
+        for (Link link : origin.getLinks())
+            if (link.getFrom().equals(origin))
+                if (!occurred.contains(link.getTo()))
+                    return dfs(link.getTo(), destination, occurred);
+
+        return null;
     }
+
 }

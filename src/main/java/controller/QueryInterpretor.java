@@ -406,7 +406,7 @@ public class QueryInterpretor {
     private void importGraph(String[] args) {
         if (args.length == 2) {
             try {
-                graph = KnowledgeGraph.fromJSON(FileManager.readFile(args[1]), this.query);
+                graph = KnowledgeGraph.fromJSON(FileManager.readFile(args[1]), !this.query);
             } catch (IOException e) {
                 System.err.println("Could not import JSON file (format error).");
             }

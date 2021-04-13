@@ -1,19 +1,22 @@
 import controller.QueryInterpretor;
 import model.KnowledgeGraph;
 import model.Property;
+import model.link.CompositionLink;
 import model.link.InstanceLink;
 import model.node.ConceptNode;
 import model.node.InstanceNode;
+import model.node.Node;
 import utils.FileManager;
 import view.GraphDisplayer;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
     private static KnowledgeGraph constructGraph() {
-        KnowledgeGraph graph = new KnowledgeGraph();
+        KnowledgeGraph graph = new KnowledgeGraph(true);
 
         // Antalgic
         Map<String, Property<?>> propsAntalgic = new HashMap<>();
@@ -52,15 +55,14 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        KnowledgeGraph hardcodedGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./graph.json"));
-        KnowledgeGraph searchGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./searchGraph.json"));
-        KnowledgeGraph yohann = KnowledgeGraph.fromJSON(FileManager.readFile("./oskur.json"));
-        KnowledgeGraph resultGraph = hardcodedGraph.search(yohann);
+        KnowledgeGraph hardcodedGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./graph.json"), true);
+        KnowledgeGraph searchGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./searchGraph.json"), false);
+        KnowledgeGraph resultGraph = hardcodedGraph.search(searchGraph);
 
-        GraphDisplayer.displayGraph(resultGraph);
+        // GraphDisplayer.displayGraph(resultGraph);
 
-        KnowledgeGraph graph = new KnowledgeGraph();
-        QueryInterpretor queryInterpretor = new QueryInterpretor(yohann);
+        KnowledgeGraph graph = new KnowledgeGraph(true);
+        QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
         queryInterpretor.queryListener();
     }
 }

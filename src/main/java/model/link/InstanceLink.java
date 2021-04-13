@@ -27,4 +27,9 @@ public class InstanceLink extends Link {
         obj.put("type", "INSTANCE");
         return obj;
     }
+
+    @Override
+    public void checkInheritProperties(Node from, Node to) {
+        super.inheritProperties(from, to);
+    }
 }

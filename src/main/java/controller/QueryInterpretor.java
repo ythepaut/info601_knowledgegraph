@@ -5,7 +5,6 @@ import model.KnowledgeGraph;
 import model.Property;
 import model.node.*;
 import model.link.*;
-import scala.collection.mutable.HashMap$;
 import utils.FileManager;
 import view.GraphDisplayer;
 
@@ -27,7 +26,7 @@ public class QueryInterpretor {
 
     public QueryInterpretor(KnowledgeGraph graph) {
         this.graph = graph;
-        this.querygraph = new KnowledgeGraph();
+        this.querygraph = new KnowledgeGraph(true);
         query = false;
     }
 
@@ -76,9 +75,11 @@ public class QueryInterpretor {
             addLink(args);
         } else if (cmd.equals("link") && args.length > 0 && args[0].equals("del")) {
             deleteLink(args);
+        } else if (cmd.equals("link") && args.length > 0 && args[0].equals("find")) {
+            findLink(args);
         } else if (cmd.equals("link") && args.length > 0 && args[0].equals("list")) {
             linkList();
-        } else if (cmd.equals("qg")) {
+        } else if (cmd.equals("switchGraph")) {
             switchGraph();
         } else if (cmd.equals("findQuery")) {
             System.out.println("trying to find the patterns with the query Knowledge Graph ...");
@@ -89,12 +90,16 @@ public class QueryInterpretor {
             }
         } else if (cmd.equals("clear")) {
             if (query) {
-                graph = new KnowledgeGraph();
+                graph = new KnowledgeGraph(true);
             } else {
-                querygraph = new KnowledgeGraph();
+                querygraph = new KnowledgeGraph(true);
             }
 
             System.out.println("Success : cleared query graph");
+        } else if (cmd.equals("graph") && args[0].equals("export")) {
+            exportGraph(args);
+        } else if (cmd.equals("graph") && args[0].equals("import")) {
+            importGraph(args);
         } else if (cmd.equals("display")) {
             GraphDisplayer.displayGraph(graph);
         } else {
@@ -105,7 +110,7 @@ public class QueryInterpretor {
     private void switchGraph() {
         this.query = !this.query;
 
-        if (this.query){
+        if (this.query) {
             System.out.println("Switching to the query knowledge grah\n you can now enter your query items");
         } else {
             System.out.println("Switching to the knowledge grah\n you can now enter your data");
@@ -124,6 +129,7 @@ public class QueryInterpretor {
 
         HashMap<String, Property<?>> properties = new HashMap<>();
         getNextProperties(properties, args, 2);
+        boolean search = getSearch(properties);
 
         Node node;
         if (args[1].equalsIgnoreCase("concept")) {
@@ -134,6 +140,7 @@ public class QueryInterpretor {
             System.err.println("Error: " + args[1] + " is not a Node type");
             return;
         }
+        node.setSearch(search);
 
         graph.addNodes(node);
         System.out.println("Successfully created node " + node);
@@ -256,7 +263,7 @@ public class QueryInterpretor {
             return;
         }
 
-        Link link = null;
+        Link link;
         int nodeIdIndex = 2;
         if (args[1].equalsIgnoreCase("ako")) {
             link = new AkoLink();
@@ -284,11 +291,11 @@ public class QueryInterpretor {
         }
 
         Node firstNode = graph.findNode(args[nodeIdIndex]);
-        Node secondNode = graph.findNode(args[nodeIdIndex+1]);
+        Node secondNode = graph.findNode(args[nodeIdIndex + 1]);
 
         boolean deleteAll = false;
-        if (args.length >= nodeIdIndex+3) {
-            link.setName(args[nodeIdIndex+2]);
+        if (args.length >= nodeIdIndex + 3) {
+            link.setName(args[nodeIdIndex + 2]);
         } else {
             deleteAll = true;
         }
@@ -311,6 +318,67 @@ public class QueryInterpretor {
             System.out.println("Success deleted link between " + firstNode + " " + secondNode);
         } else {
             System.err.println("Error : unsuccessful link deletion " + firstNode + " " + secondNode);
+        }
+    }
+
+    private void findLink(String[] args) {
+        if (args.length < 4) {
+            System.err.println("Syntax error. Use `link find [LinkType] [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]`");
+            return;
+        }
+
+        Link link;
+        int nodeIdIndex = 2;
+        if (args[1].equalsIgnoreCase("ako")) {
+            link = new AkoLink();
+        } else if (args[1].equalsIgnoreCase("association")) {
+            link = new AssociationLink();
+        } else if (args[1].equalsIgnoreCase("composition")) {
+            if (args.length < 5) {
+                System.out.println("Error: not enough arguments");
+                return;
+            }
+            if (args[2].equalsIgnoreCase("oriented")) {
+                link = new CompositionLink(true);
+            } else if (args[2].equalsIgnoreCase("nonoriented")) {
+                link = new CompositionLink(false);
+            } else {
+                System.err.println("Error: no orientation specified");
+                return;
+            }
+            nodeIdIndex++;
+        } else if (args[1].equalsIgnoreCase("instance")) {
+            link = new InstanceLink();
+        } else {
+            System.err.println("Error: no valid TypeLink specified");
+            return;
+        }
+
+        Node firstNode = graph.findNode(args[nodeIdIndex]);
+        Node secondNode = graph.findNode(args[nodeIdIndex + 1]);
+
+        if (secondNode == null || firstNode == null) {
+            System.out.println("Error: no nodes corresponding");
+            return;
+        }
+
+        try {
+            link.setFrom(firstNode);
+            link.setTo(secondNode);
+        } catch (IllegalLinkAssociationException e) {
+            System.err.println("Error : link cannot exist illegal association");
+            return;
+        }
+
+        List<Link> links = graph.findLinks(link);
+        if (links.size() == 0) {
+            System.err.println("Error : no corresponding link found");
+        } else {
+            System.out.println("Links found\n===================");
+            for (Link linkPrint : links) {
+                System.out.println(linkPrint.toDetailedString(null));
+                System.out.println("===================");
+            }
         }
     }
 
@@ -337,7 +405,7 @@ public class QueryInterpretor {
     private void importGraph(String[] args) {
         if (args.length == 2) {
             try {
-                graph = KnowledgeGraph.fromJSON(FileManager.readFile(args[1]));
+                graph = KnowledgeGraph.fromJSON(FileManager.readFile(args[1]), false);
             } catch (IOException e) {
                 System.err.println("Could not import JSON file (format error).");
             }
@@ -355,17 +423,20 @@ public class QueryInterpretor {
         }
     }
 
-    private void getSearch(Node node, HashMap<String, Property<?>> properties) {
+    private boolean getSearch(HashMap<String, Property<?>> properties) {
         for (String key : properties.keySet()) {
             if (key.equalsIgnoreCase("search")) {
-                if (properties.get(key).getValue().equals("true"))
-                    node.setSearch(true);
+                boolean isTrue = properties.get(key).getValue().equals("true");
                 properties.remove(key, properties.get(key));
+                if (isTrue) {
+                    return true;
+                }
             }
         }
+        return false;
     }
 
-    private static HashMap<String, Property<?>> getNextProperties (String[] args, int basePointer) {
+    private static HashMap<String, Property<?>> getNextProperties(String[] args, int basePointer) {
         if (args.length <= basePointer) {
             return null;
         }
@@ -395,10 +466,13 @@ public class QueryInterpretor {
                 "node list",
                 "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "link del <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
+                "link find <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "link list",
-                "qg",
-                "find",
+                "switchGraph",
+                "findQuery",
                 "clear",
+                "graph import <graphPath>",
+                "graph export <graphPath>",
                 "display",
                 "exit"
         };

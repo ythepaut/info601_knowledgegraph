@@ -20,18 +20,18 @@ import org.json.JSONException;
 public class KnowledgeGraph {
     private final List<Node> nodes;
     private final List<Link> links;
+    private boolean inherit;
 
-    private int nodeId = 0;
-    private int linkId = 0;
-
-    public KnowledgeGraph() {
+    public KnowledgeGraph(boolean inherit) {
+        this.inherit = inherit;
         nodes = new ArrayList<>();
         links = new ArrayList<>();
     }
 
     /**
      * Adds nodes to the graph
-     * @param nodes             Node[]          Nodes to add
+     *
+     * @param nodes Node[]          Nodes to add
      */
     public void addNodes(Node... nodes) {
         for (Node node : nodes)
@@ -41,7 +41,8 @@ public class KnowledgeGraph {
 
     /**
      * Removes nodes from the graph
-     * @param nodes             Node[]          Nodes to remove
+     *
+     * @param nodes Node[]          Nodes to remove
      */
     public void removeNodes(Node... nodes) {
         this.nodes.removeAll(Arrays.asList(nodes));
@@ -53,9 +54,10 @@ public class KnowledgeGraph {
 
     /**
      * Initializes and adds a link to the graph
-     * @param nodeFrom          Node            Link's origin node
-     * @param nodeTo            Node            Link's destination node
-     * @param link              Link            Link to add
+     *
+     * @param nodeFrom Node            Link's origin node
+     * @param nodeTo   Node            Link's destination node
+     * @param link     Link            Link to add
      */
     public boolean addLink(Node nodeFrom, Node nodeTo, Link link) {
         try {
@@ -65,6 +67,8 @@ public class KnowledgeGraph {
             nodeFrom.addLink(link);
             addNodes(nodeFrom, nodeTo);
             links.add(link);
+            if (inherit)
+                link.checkInheritProperties(nodeFrom, nodeTo);
             return true;
         } catch (IllegalLinkAssociationException e) {
             System.out.println("Error: illegal association");
@@ -74,9 +78,10 @@ public class KnowledgeGraph {
 
     /**
      * Delete and adds a link to the graph
-     * @param nodeFrom          Node            Link's origin node
-     * @param nodeTo            Node            Link's destination node
-     * @param link              Link            Link to delete
+     *
+     * @param nodeFrom Node            Link's origin node
+     * @param nodeTo   Node            Link's destination node
+     * @param link     Link            Link to delete
      */
     public void removeLink(Node nodeFrom, Node nodeTo, Link link) {
         List<Link> links = nodeFrom.getLinks();
@@ -99,9 +104,10 @@ public class KnowledgeGraph {
 
     /**
      * Deletes the link in argument form the graph.
-     * @param linkToRemove      Link        link to remove
-     * @param deleteSameType    boolean     if true, all link of the same type as linkToRemove will be removed
-     * @return                              true if the link has been deleted
+     *
+     * @param linkToRemove   Link        link to remove
+     * @param deleteSameType boolean     if true, all link of the same type as linkToRemove will be removed
+     * @return true if the link has been deleted
      */
     public boolean removeLink(Link linkToRemove, boolean deleteSameType) {
 
@@ -151,8 +157,9 @@ public class KnowledgeGraph {
 
     /**
      * Find all nodes in graph that matches the given properties
-     * @param properties        Map<>           Properties filter
-     * @return                                  Nodes matching the filter
+     *
+     * @param properties Map<>           Properties filter
+     * @return Nodes matching the filter
      */
     public List<Node> findNodes(Map<String, Property<?>> properties) {
         List<Node> found = new ArrayList<>();
@@ -180,8 +187,9 @@ public class KnowledgeGraph {
     /**
      * Find all nodes in graph that matches the given properties
      * for a given node type (instance)
-     * @param properties        Map<>           Properties filter
-     * @return                                  Nodes matching the filter
+     *
+     * @param properties Map<>           Properties filter
+     * @return Nodes matching the filter
      */
     public List<Node> findNodes(Map<String, Property<?>> properties, Class<? extends Node> nodeType) {
         List<Node> found = new ArrayList<>();
@@ -191,8 +199,23 @@ public class KnowledgeGraph {
         return found;
     }
 
+    public List<Link> findLinks(Link template) {
+        List<Link> found = new ArrayList<Link>();
+
+        for (Link link : template.getTo().getLinks()) {
+            try {
+                if (link.getLinkedNode(template.getTo()).equals(template.getFrom())) {
+                    found.add(link);
+                }
+            } catch (NoLinkedNodeException e) { }
+        }
+
+        return found;
+    }
+
     /**
      * Find a node according to its id
+     *
      * @param id Node ID
      * @return Corresponding node
      */
@@ -210,11 +233,11 @@ public class KnowledgeGraph {
             for (Link link : node.getLinks()) {
                 if (link.getFrom().equals(node)) {
                     res.append(node)
-                            .append(" ---[ ")
-                            .append(link.getName())
-                            .append(" ]--> ")
-                            .append(link.getTo().toString())
-                            .append("\n");
+                       .append(" ---[ ")
+                       .append(link.getName())
+                       .append(" ]--> ")
+                       .append(link.getTo().toString())
+                       .append("\n");
                 }
             }
         }
@@ -264,8 +287,8 @@ public class KnowledgeGraph {
      * @return Graph
      * @throws JSONException Bad JSON
      */
-    public static KnowledgeGraph fromJSON(String json) throws JSONException {
-        KnowledgeGraph graph = new KnowledgeGraph();
+    public static KnowledgeGraph fromJSON(String json, boolean inherit) throws JSONException {
+        KnowledgeGraph graph = new KnowledgeGraph(inherit);
         JSONObject main = new JSONObject(json);
 
         int maxId = 0;
@@ -293,7 +316,7 @@ public class KnowledgeGraph {
     }
 
     public KnowledgeGraph search(KnowledgeGraph searchedGraph) {
-        KnowledgeGraph resultGraph = new KnowledgeGraph();
+        KnowledgeGraph resultGraph = new KnowledgeGraph(false);
 
         for (Node searchedNode : searchedGraph.nodes) {
             if (!searchedNode.isSearched())
@@ -320,6 +343,7 @@ public class KnowledgeGraph {
                         for (Link matchingLink : matchingLinks) {
                             try {
                                 Node otherExtremity = matchingLink.getLinkedNode(matchedNodeInOriginalGraph);
+                                System.out.println(otherExtremity);
                                 resultGraph.addNodes(otherExtremity);
                                 resultGraph.addLink(matchingLink);
                             } catch (Exception e) {
@@ -331,16 +355,17 @@ public class KnowledgeGraph {
             }
         }
 
-        // lmao hacky af 🤣
-        return KnowledgeGraph.fromJSON(resultGraph.toJSON());
+        // lmao hacky af
+        return KnowledgeGraph.fromJSON(resultGraph.toJSON(), true);
     }
 
     /**
      * Depth-First Search
-     * @param origin        Node from which we start
-     * @param occurred      Nodes we already ran through
+     *
+     * @param origin   Node from which we start
+     * @param occurred Nodes we already ran through
      */
-    List<Node> dfs(Node origin, Node destination, List<Node> occurred) {
+    List<Node> depthFirstSearch(Node origin, Node destination, List<Node> occurred) {
 
         if (origin.equals(destination))
             return occurred;
@@ -352,9 +377,16 @@ public class KnowledgeGraph {
         for (Link link : origin.getLinks())
             if (link.getFrom().equals(origin))
                 if (!occurred.contains(link.getTo()))
-                    return dfs(link.getTo(), destination, occurred);
+                    return depthFirstSearch(link.getTo(), destination, occurred);
 
         return null;
     }
 
+    public boolean shouldInherit() {
+        return inherit;
+    }
+
+    public void setInherit(boolean inherit) {
+        this.inherit = inherit;
+    }
 }

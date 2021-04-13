@@ -63,6 +63,14 @@ public abstract class Link extends GraphElement {
 
     public abstract boolean isSameLink(Link other);
 
+    public void checkInheritProperties(Node from, Node to) {}
+
+    protected void inheritProperties(Node from, Node to) {
+        for (String key : from.getProperties().keySet())
+            if (to.getProperties().get(key) == null)
+                to.getProperties().put(key, from.getProperties().get(key).clone());
+    }
+
     /**
      * Get a node depending of the other extremity
      * @param other Other node

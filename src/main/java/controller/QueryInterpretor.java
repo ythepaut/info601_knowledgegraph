@@ -26,7 +26,7 @@ public class QueryInterpretor {
 
     public QueryInterpretor(KnowledgeGraph graph) {
         this.graph = graph;
-        this.querygraph = new KnowledgeGraph();
+        this.querygraph = new KnowledgeGraph(true);
         query = false;
     }
 
@@ -88,9 +88,9 @@ public class QueryInterpretor {
             }
         } else if (cmd.equals("clear")) {
             if (query) {
-                graph = new KnowledgeGraph();
+                graph = new KnowledgeGraph(true);
             } else {
-                querygraph = new KnowledgeGraph();
+                querygraph = new KnowledgeGraph(true);
             }
 
             System.out.println("Success : cleared query graph");
@@ -341,7 +341,7 @@ public class QueryInterpretor {
     private void importGraph(String[] args) {
         if (args.length == 2) {
             try {
-                graph = KnowledgeGraph.fromJSON(FileManager.readFile(args[1]));
+                graph = KnowledgeGraph.fromJSON(FileManager.readFile(args[1]), false);
             } catch (IOException e) {
                 System.err.println("Could not import JSON file (format error).");
             }

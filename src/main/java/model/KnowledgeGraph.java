@@ -317,24 +317,8 @@ public class KnowledgeGraph {
             }
         }
 
-        /*
-        System.out.println("");
-
-        for (Node node : resultGraph.nodes) {
-            System.out.println(node);
-        }
-
-        System.out.println("");
-
-        for (Link link : resultGraph.links) {
-            System.out.println(link.getFrom().getId());
-            System.out.println(link.getTo().getId());
-        }
-
-        System.out.println("");
-        */
-
-        return resultGraph;
+        // lmao hacky af 🤣
+        return KnowledgeGraph.fromJSON(resultGraph.toJSON());
     }
 
     public KnowledgeGraph path(Node origin, Node destination) {

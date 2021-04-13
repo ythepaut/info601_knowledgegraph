@@ -184,16 +184,22 @@ public class QueryInterpretor {
     }
 
     private void deleteLink(String[] args) {
-        if (args.length < 3) {
+        if (args.length < 4) {
             System.out.println("Error: not enough arguments");
+            return;
         }
-        int nodeIdIndex = 2;
+
         Link link = null;
+        int nodeIdIndex = 2;
         if (args[1].equalsIgnoreCase("ako")) {
             link = new AkoLink();
         } else if (args[1].equalsIgnoreCase("association")) {
             link = new AssociationLink();
         } else if (args[1].equalsIgnoreCase("composition")) {
+            if (args.length < 5) {
+                System.out.println("Error: not enough arguments");
+                return;
+            }
             if (args[2].equalsIgnoreCase("oriented")) {
                 link = new CompositionLink(true);
             } else if (args[2].equalsIgnoreCase("nonoriented")) {
@@ -209,6 +215,33 @@ public class QueryInterpretor {
             System.out.println("Error: no valid TypeLink specified");
             return;
         }
+
+        Node firstNode = graph.findNode(args[nodeIdIndex]);
+        Node secondNode = graph.findNode(args[nodeIdIndex+1]);
+
+        boolean deleteAll = false;
+        if (args.length >= nodeIdIndex+3) {
+            link.setName(args[nodeIdIndex+2]);
+        } else {
+            deleteAll = true;
+        }
+
+        if (secondNode == null || firstNode == null) {
+            System.out.println("Error: no nodes corresponding");
+            return;
+        }
+
+        try {
+            link.setFrom(firstNode);
+            link.setTo(secondNode);
+        } catch (IllegalLinkAssociationException e) {
+            System.out.println("Error: illegal association");
+            return;
+        }
+
+        //TODO: lfkjgdlgfhjogidsfjghlkerjdfrsmlgvjxclkgjdflkgjfdjkgjfdlkgjfdlkjglkfdjglkfdjglkfdjtoirtpdspldù
+        //graph.todoLuchat();
+        System.out.println("Success deleted link between " + firstNode + " " + secondNode);
     }
 
     private static void getNextProperties(HashMap<String, Property<?>> base, String[] args, int basePointer) {
@@ -247,7 +280,7 @@ public class QueryInterpretor {
                 "node del <ID> [Attribute1 name]:[Attribute1 value] [Attribute2 name]:[Attribute2 value]...",
                 "node find <ID> [Attribute1 name]:[Attribute1 value] [Attribute2 name]:[Attribute2 value]...",
                 "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
-                "link del [LinkType] [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
+                "link del <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "find ",
                 "display",
                 "exit"

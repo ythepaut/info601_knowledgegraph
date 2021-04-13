@@ -108,6 +108,11 @@ public abstract class Node {
             res += keys[i] + " : " + ((Property) values[i]).getValue() + "\n";
         }
 
+        ArrayList<Link> links = (ArrayList<Link>) this.getLinks();
+        for (int i = 0; i < links.size(); i++) {
+            res += links.get(i).toString() + "\n";
+        }
+
         return res;
     }
 

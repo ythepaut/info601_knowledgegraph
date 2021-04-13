@@ -1,6 +1,7 @@
 import controller.QueryInterpretor;
 import model.KnowledgeGraph;
 import model.Property;
+import model.link.CompositionLink;
 import model.link.InstanceLink;
 import model.node.ConceptNode;
 import model.node.InstanceNode;
@@ -46,7 +47,7 @@ public class Main {
         InstanceLink linkAntalgicMedoc = new InstanceLink();
         graph.addLink(antalgic, medoc, linkAntalgicMedoc);
 
-        // graph.removeLink(linkAntalgicMedoc); // test suppression
+        // graph.removeLink(linkAntalgicMedoc, true); // test suppression
 
         return graph;
     }

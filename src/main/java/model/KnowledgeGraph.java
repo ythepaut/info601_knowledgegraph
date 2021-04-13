@@ -91,25 +91,35 @@ public class KnowledgeGraph {
     }
 
     /**
-     * Deletes a link to of the graph
-     * @param linkToRemove      Link        link to delete
-     * @return if the deletion has been successful
+     * Deletes the link in argument form the graph.
+     * @param linkToRemove      Link        link to remove
+     * @param deleteSameType    boolean     if true, all link of the same type as linkToRemove will be removed
      */
-    public boolean removeLink(Link linkToRemove) {
-        for (Link link : this.links) {
-            if (link.getId().equals(linkToRemove.getId())){
+    public void removeLink(Link linkToRemove, boolean deleteSameType) {
+        // node references deletion
+        linkToRemove.getFrom().removeLink(linkToRemove);
+        linkToRemove.getTo().removeLink(linkToRemove);
 
-                // node references deletion
-                linkToRemove.getFrom().removeLink(linkToRemove);
-                linkToRemove.getTo().removeLink(linkToRemove);
+        // global list deletion
+        this.links.remove(linkToRemove);
 
-                // global list deletion
-                this.links.remove(linkToRemove);
+        if (deleteSameType) {
+            List<Link> linksToRemove = new ArrayList<>();
 
-                return true;
+            for (Link link : this.links) {
+                // the link will be removed if it has the same class
+                // as the one passed in parameter
+                if ( link.getClass().isInstance(linkToRemove) ){
+                    linksToRemove.add(link);
+                }
+            }
+            // we remove definitely the links in a new loop to avoid border effect
+            for (Link link : linksToRemove) {
+                link.getFrom().removeLink(link);
+                link.getTo().removeLink(link);
+                this.links.remove(link);
             }
         }
-        return false;
     }
 
     /**

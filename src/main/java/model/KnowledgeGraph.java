@@ -431,11 +431,12 @@ public class KnowledgeGraph {
                 }
             }
 
+
         } while (complement.nodes.size() > 1);
 
         // Debug : Affichage de tous les noeuds avec les poids et chemins
         for (int i = 0 ; i < weights.length ; ++i) {
-            System.err.println(nodes.get(i) + "\t : " + weights[i] + "\tby " + (pathsBy[i] != null ? pathsBy[i] : "-"));
+            System.err.println(nodes.get(i) + "\t\t : " + weights[i] + "\t\t\tby " + (pathsBy[i] != null ? pathsBy[i] : "-"));
         }
 
         // Construction du chemin

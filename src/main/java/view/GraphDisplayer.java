@@ -2,6 +2,8 @@ package view;
 
 import model.KnowledgeGraph;
 import model.link.AkoLink;
+import model.link.AssociationLink;
+import model.link.InstanceLink;
 import model.link.Link;
 import model.node.Node;
 import org.graphstream.graph.Edge;
@@ -59,7 +61,7 @@ public class GraphDisplayer {
                 if (link.getFrom().equals(node)) {
                     Node from = link.getFrom();
                     Node to = link.getTo();
-                    if (link instanceof AkoLink) {
+                    if (link instanceof AkoLink || link instanceof InstanceLink) {
                         from = link.getTo();
                         to = link.getFrom();
                     }

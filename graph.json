@@ -95,8 +95,8 @@
         },
         {
             "name": "ako",
-            "from": "6",
-            "to": "0",
+            "from": "0",
+            "to": "6",
             "oriented": true,
             "type": "AKO"
         },
@@ -134,6 +134,13 @@
             "to": "8",
             "oriented": true,
             "type": "ASSOCIATION"
+        },
+        {
+            "name": "has",
+            "from": "0",
+            "to": "1",
+            "oriented": true,
+            "type": "COMPOSITION"
         }
     ]
 }

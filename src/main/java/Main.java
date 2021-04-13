@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class Main {
     private static KnowledgeGraph constructGraph() {
-        KnowledgeGraph graph = new KnowledgeGraph();
+        KnowledgeGraph graph = new KnowledgeGraph(true);
 
         // Antalgic
         Map<String, Property<?>> propsAntalgic = new HashMap<>();
@@ -55,13 +55,13 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        KnowledgeGraph hardcodedGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./graph.json"));
-        KnowledgeGraph searchGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./searchGraph.json"));
+        KnowledgeGraph hardcodedGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./graph.json"), true);
+        KnowledgeGraph searchGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./searchGraph.json"), false);
         KnowledgeGraph resultGraph = hardcodedGraph.search(searchGraph);
 
-        //GraphDisplayer.displayGraph(resultGraph);
+        // GraphDisplayer.displayGraph(resultGraph);
 
-        KnowledgeGraph graph = new KnowledgeGraph();
+        KnowledgeGraph graph = new KnowledgeGraph(true);
         QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
         queryInterpretor.queryListener();
     }

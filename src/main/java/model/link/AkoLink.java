@@ -25,4 +25,9 @@ public class AkoLink extends Link {
         obj.put("type", "AKO");
         return obj;
     }
+
+    @Override
+    public void checkInheritProperties(Node from, Node to) {
+        super.inheritProperties(from, to);
+    }
 }

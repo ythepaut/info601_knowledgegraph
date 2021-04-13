@@ -17,8 +17,10 @@ import org.json.JSONException;
 public class KnowledgeGraph {
     private final List<Node> nodes;
     private final List<Link> links;
+    private boolean inherit;
 
-    public KnowledgeGraph() {
+    public KnowledgeGraph(boolean inherit) {
+        this.inherit = inherit;
         nodes = new ArrayList<>();
         links = new ArrayList<>();
     }
@@ -62,6 +64,8 @@ public class KnowledgeGraph {
             nodeFrom.addLink(link);
             addNodes(nodeFrom, nodeTo);
             links.add(link);
+            if (inherit)
+                link.checkInheritProperties(nodeFrom, nodeTo);
             return true;
         } catch (IllegalLinkAssociationException e) {
             System.out.println("Error: illegal association");
@@ -213,11 +217,11 @@ public class KnowledgeGraph {
             for (Link link : node.getLinks()) {
                 if (link.getFrom().equals(node)) {
                     res.append(node)
-                            .append(" ---[ ")
-                            .append(link.getName())
-                            .append(" ]--> ")
-                            .append(link.getTo().toString())
-                            .append("\n");
+                       .append(" ---[ ")
+                       .append(link.getName())
+                       .append(" ]--> ")
+                       .append(link.getTo().toString())
+                       .append("\n");
                 }
             }
         }
@@ -258,8 +262,8 @@ public class KnowledgeGraph {
      * @return Graph
      * @throws JSONException Bad JSON
      */
-    public static KnowledgeGraph fromJSON(String json) throws JSONException {
-        KnowledgeGraph graph = new KnowledgeGraph();
+    public static KnowledgeGraph fromJSON(String json, boolean inherit) throws JSONException {
+        KnowledgeGraph graph = new KnowledgeGraph(inherit);
         JSONObject main = new JSONObject(json);
 
         int maxId = 0;
@@ -287,7 +291,7 @@ public class KnowledgeGraph {
     }
 
     public KnowledgeGraph search(KnowledgeGraph searchedGraph) {
-        KnowledgeGraph resultGraph = new KnowledgeGraph();
+        KnowledgeGraph resultGraph = new KnowledgeGraph(false);
 
         for (Node searchedNode : searchedGraph.nodes) {
             if (!searchedNode.isSearched())
@@ -306,7 +310,6 @@ public class KnowledgeGraph {
                         continue;
 
                     resultGraph.addNodes(matchedNodeInOriginalGraph);
-                    System.out.println(matchedNodeInOriginalGraph);
 
                     for (Link possibleRelation : searchedNode.getLinks()) {
                         List<Link> matchingLinks = matchedNodeInOriginalGraph.getMatchingLinks(searchedNode, possibleRelation);
@@ -314,6 +317,7 @@ public class KnowledgeGraph {
                         for (Link matchingLink : matchingLinks) {
                             try {
                                 Node otherExtremity = matchingLink.getLinkedNode(matchedNodeInOriginalGraph);
+                                System.out.println(otherExtremity);
                                 resultGraph.addNodes(otherExtremity);
                                 resultGraph.addLink(matchingLink);
                             } catch (Exception e) {
@@ -325,8 +329,8 @@ public class KnowledgeGraph {
             }
         }
 
-        // lmao hacky af 🤣
-        return KnowledgeGraph.fromJSON(resultGraph.toJSON());
+        // lmao hacky af
+        return KnowledgeGraph.fromJSON(resultGraph.toJSON(), true);
     }
 
     /**
@@ -335,7 +339,7 @@ public class KnowledgeGraph {
      * @param origin   Node from which we start
      * @param occurred Nodes we already ran through
      */
-    List<Node> dfs(Node origin, Node destination, List<Node> occurred) {
+    List<Node> depthFirstSearch(Node origin, Node destination, List<Node> occurred) {
 
         if (origin.equals(destination))
             return occurred;
@@ -347,9 +351,16 @@ public class KnowledgeGraph {
         for (Link link : origin.getLinks())
             if (link.getFrom().equals(origin))
                 if (!occurred.contains(link.getTo()))
-                    return dfs(link.getTo(), destination, occurred);
+                    return depthFirstSearch(link.getTo(), destination, occurred);
 
         return null;
     }
 
+    public boolean shouldInherit() {
+        return inherit;
+    }
+
+    public void setInherit(boolean inherit) {
+        this.inherit = inherit;
+    }
 }

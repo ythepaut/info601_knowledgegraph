@@ -4,7 +4,7 @@ package model;
  * Property
  * @param <T> Type
  */
-public class Property<T> {
+public class Property<T> implements Cloneable {
     private T value;
 
     public Property(T value) {
@@ -31,5 +31,19 @@ public class Property<T> {
     @Override
     public String toString() {
         return value.toString();
+    }
+
+    public Property<T> clone() {
+        Property<T> cloned;
+
+        try {
+            cloned = (Property<T>) super.clone();
+        } catch (CloneNotSupportedException | ClassCastException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        cloned.value = value;
+        return cloned;
     }
 }

@@ -78,7 +78,7 @@ public class QueryInterpretor {
             deleteLink(args);
         } else if (cmd.equals("link") && args.length > 0 && args[0].equals("list")) {
             linkList();
-        } else if (cmd.equals("qg")) {
+        } else if (cmd.equals("switchGraph")) {
             switchGraph();
         } else if (cmd.equals("findQuery")) {
             System.out.println("trying to find the patterns with the query Knowledge Graph ...");
@@ -404,9 +404,11 @@ public class QueryInterpretor {
                 "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "link del <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "link list",
-                "qg",
-                "find",
+                "switchGraph",
+                "findQuery",
                 "clear",
+                "import <graphPath>",
+                "export <graphPath>",
                 "display",
                 "exit"
         };

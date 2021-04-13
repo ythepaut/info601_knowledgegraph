@@ -60,9 +60,25 @@ public abstract class Node {
      */
     public List<Link> getLinks(Link link) {
         List<Link> links = new ArrayList<>();
-        for (Link l : this.links)
-            if (link.isSameLink(link))
+        for (Link lnk : this.links)
+            if (link.isSameLink(lnk))
+                links.add(lnk);
+        return links;
+    }
+
+    /**
+     * Returns all of the connected links of the node
+     * which equals to the one passed in parameter.
+     *
+     * @param link Link            link to compare
+     * @return List<Link>
+     */
+    public List<Link> getMatchingLinks(Node other, Link relation) {
+        List<Link> links = new ArrayList<>();
+        for (Link link : this.links)
+            if (relation.isSubsetOf(link))
                 links.add(link);
+
         return links;
     }
 
@@ -192,7 +208,7 @@ public abstract class Node {
     }
 
     public boolean isSubsetOf(Node other) {
-        if (!this.getClass().isInstance(other))
+        if (!getClass().isInstance(other))
             return false;
 
         for (String key : properties.keySet()) {

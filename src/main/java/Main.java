@@ -8,6 +8,7 @@ import model.node.InstanceNode;
 import model.node.Node;
 import view.GraphDisplayer;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,25 +53,18 @@ public class Main {
         return graph;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        KnowledgeGraph hardcodedGraph = KnowledgeGraph.fromFile("./graph.json");
+        KnowledgeGraph searchGraph = KnowledgeGraph.fromFile("./searchGraph.json");
+        KnowledgeGraph resultGraph = hardcodedGraph.search(searchGraph);
 
-        KnowledgeGraph hardcodeGraph = constructGraph();
-        // GraphDisplayer.displayGraph(hardcodeGraph);
-
-        System.out.println(hardcodeGraph);
+        System.out.println(resultGraph.toJSON());
 
         KnowledgeGraph graph = new KnowledgeGraph();
         QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
         queryInterpretor.queryListener();
 
-        /*Map<String, Property<?>> queryProperties = new HashMap<>();
-        queryProperties.put("name", new Property<>("Doliprane"));
-        queryProperties.put("proprete", new Property<>(1));
-        queryProperties.put("quantite", new Property<>(90));
-        List<Node> list = hardcodeGraph.findNodes(queryProperties);
-        for(Node result : list) {
-            System.out.println(result.toString());
-        }*/
+        GraphDisplayer.displayGraph(resultGraph);
 
     }
 }

@@ -41,6 +41,10 @@ public class KnowledgeGraph {
         this.nodes.removeAll(Arrays.asList(nodes));
     }
 
+    public void addLink(Link link) {
+        links.add(link);
+    }
+
     /**
      * Initializes and adds a link to the graph
      * @param nodeFrom          Node            Link's origin node
@@ -260,20 +264,74 @@ public class KnowledgeGraph {
         return graph;
     }
 
-    public KnowledgeGraph search(KnowledgeGraph other) {
-        KnowledgeGraph result = new KnowledgeGraph();
-
-        for (Node node : other.nodes) {
-            if (!node.isSearched())
-                continue;
-
-            /*
-            for (Link link : other.links) {
-                if (!link.getLinkedNode(node))
-            }*/
+    public static KnowledgeGraph fromFile(String path) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        String currentLine;
+        StringBuilder total = new StringBuilder();
+        while ((currentLine = reader.readLine()) != null) {
+            total.append(currentLine);
         }
 
-        return result;
+        return KnowledgeGraph.fromJSON(total.toString());
+    }
+
+    public KnowledgeGraph search(KnowledgeGraph searchedGraph) {
+        KnowledgeGraph resultGraph = new KnowledgeGraph();
+
+        for (Node searchedNode : searchedGraph.nodes) {
+            if (!searchedNode.isSearched())
+                continue;
+
+            for (Link link : searchedGraph.links) {
+                Node foundNodeInSearchedGraph;
+                try {
+                    foundNodeInSearchedGraph = link.getLinkedNode(searchedNode);
+                } catch (Exception e) {
+                    continue;
+                }
+
+                for (Node matchedNodeInOriginalGraph : nodes) {
+                    if (!foundNodeInSearchedGraph.isSubsetOf(matchedNodeInOriginalGraph))
+                        continue;
+
+                    resultGraph.addNodes(matchedNodeInOriginalGraph);
+                    System.out.println(matchedNodeInOriginalGraph);
+
+                    for (Link possibleRelation : searchedNode.getLinks()) {
+                        List<Link> matchingLinks = matchedNodeInOriginalGraph.getMatchingLinks(searchedNode, possibleRelation);
+
+                        for (Link matchingLink : matchingLinks) {
+                            try {
+                                Node otherExtremity = matchingLink.getLinkedNode(matchedNodeInOriginalGraph);
+                                resultGraph.addNodes(otherExtremity);
+                                resultGraph.addLink(matchingLink);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
+        System.out.println("");
+
+        for (Node node : resultGraph.nodes) {
+            System.out.println(node);
+        }
+
+        System.out.println("");
+
+        for (Link link : resultGraph.links) {
+            System.out.println(link.getFrom().getId());
+            System.out.println(link.getTo().getId());
+        }
+
+        System.out.println("");
+        */
+
+        return resultGraph;
     }
 
     public KnowledgeGraph path(Node origin, Node destination) {

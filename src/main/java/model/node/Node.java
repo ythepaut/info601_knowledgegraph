@@ -198,6 +198,10 @@ public abstract class Node {
         return true;
     }
 
+    public static void setNextId(int nextId) {
+        NEXT_ID = nextId;
+    }
+
     public boolean isSearched() {
         return search;
     }

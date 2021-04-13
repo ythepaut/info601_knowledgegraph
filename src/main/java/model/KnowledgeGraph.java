@@ -69,7 +69,7 @@ public class KnowledgeGraph {
      * Delete and adds a link to the graph
      * @param nodeFrom          Node            Link's origin node
      * @param nodeTo            Node            Link's destination node
-     * @param linkType          Class           Link type to delete
+     * @param link              Link            Link to delete
      */
     public void removeLink(Node nodeFrom, Node nodeTo, Link link) {
         List<Link> links = nodeFrom.getLinks();
@@ -198,14 +198,19 @@ public class KnowledgeGraph {
      */
     public static KnowledgeGraph fromJSON(String json) throws JSONException {
         KnowledgeGraph graph = new KnowledgeGraph();
-
         JSONObject main = new JSONObject(json);
+
+        int maxId = 0;
 
         JSONArray nodes = main.getJSONArray("nodes");
         for (Object nodeObject : nodes) {
             Node node = Node.fromJSONObject((JSONObject) nodeObject);
             graph.addNodes(node);
+            if (Integer.parseInt(node.getId()) > maxId) {
+                maxId = Integer.parseInt(node.getId());
+            }
         }
+        Node.setNextId(maxId + 1);
 
         JSONArray links = main.getJSONArray("links");
         for (Object linkObject : links) {
@@ -217,17 +222,6 @@ public class KnowledgeGraph {
         }
 
         return graph;
-    }
-
-    public static KnowledgeGraph fromFile(String path) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(path));
-        String currentLine;
-        StringBuilder total = new StringBuilder();
-        while ((currentLine = reader.readLine()) != null) {
-            total.append(currentLine);
-        }
-
-        return KnowledgeGraph.fromJSON(total.toString());
     }
 
     public KnowledgeGraph search(KnowledgeGraph other) {

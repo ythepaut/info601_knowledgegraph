@@ -4,10 +4,6 @@ import model.Property;
 import model.link.InstanceLink;
 import model.node.ConceptNode;
 import model.node.InstanceNode;
-import model.node.Node;
-import view.GraphDisplayer;
-
-import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,24 +47,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //KnowledgeGraph hardcodeGraph = constructGraph();
-        // GraphDisplayer.displayGraph(hardcodeGraph);
-
-        //System.out.println(hardcodeGraph);
-
         KnowledgeGraph graph = new KnowledgeGraph();
         QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
         queryInterpretor.queryListener();
-
-
-        /*Map<String, Property<?>> queryProperties = new HashMap<>();
-        queryProperties.put("name", new Property<>("Doliprane"));
-        queryProperties.put("proprete", new Property<>(1));
-        queryProperties.put("quantite", new Property<>(90));
-        List<Node> list = hardcodeGraph.findNodes(queryProperties);
-        for(Node result : list) {
-            System.out.println(result.toString());
-        }*/
 
     }
 }

@@ -5,6 +5,7 @@ import model.link.InstanceLink;
 import model.node.ConceptNode;
 import model.node.InstanceNode;
 import utils.FileManager;
+import view.GraphDisplayer;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,10 +51,14 @@ public class Main {
         return graph;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        KnowledgeGraph hardcodedGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./graph.json"), true);
+        KnowledgeGraph searchGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./small.json"), false);
+        KnowledgeGraph resultGraph = hardcodedGraph.search(searchGraph);
 
-        KnowledgeGraph graph = new KnowledgeGraph(true);
-        QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
+        GraphDisplayer.displayGraph(hardcodedGraph);
+
+        QueryInterpretor queryInterpretor = new QueryInterpretor(hardcodedGraph);
         queryInterpretor.queryListener();
     }
 }

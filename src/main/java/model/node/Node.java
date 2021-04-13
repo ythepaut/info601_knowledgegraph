@@ -131,7 +131,7 @@ public abstract class Node extends GraphElement {
 
         res.append("Links:\n");
         for (Link link : getLinks()) {
-            res.append(link.toDetailedString(this)).append("\n");
+            res.append("\t").append(link.toDetailedString(this)).append("\n");
         }
 
         return res.toString();

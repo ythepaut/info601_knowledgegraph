@@ -40,7 +40,7 @@ public class QueryInterpretor {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String rawQuery;
         do {
-            System.out.print("\n> ");
+            System.out.print("\n" + (this.query ? "$" : ">") + " ");
             try {
                 rawQuery = reader.readLine();
             } catch (IOException e) {
@@ -97,7 +97,10 @@ public class QueryInterpretor {
             importGraph(args);
         } else if (cmd.equals("graph") && args[0].equals("path")) {
             // WIP
-            System.out.println(graph.depthFirstSearch(graph.findNode(args[1]), graph.findNode(args[2]), new ArrayList<>()));
+            Node origin = graph.findNode(args[1]);
+            Node destination = graph.findNode(args[2]);
+            System.out.println("Recherche de " + origin + " à " + destination + "...");
+            System.out.println(graph.depthFirstSearch(origin, destination, new ArrayList<>()));
         } else if (cmd.equals("display")) {
             GraphDisplayer.displayGraph(graph);
         } else {

@@ -364,8 +364,6 @@ public class KnowledgeGraph {
      */
     public List<Node> depthFirstSearch(Node origin, Node destination, List<Node> occurred) {
 
-        System.err.println(origin);
-
         if (occurred == null)
             occurred = new ArrayList<>();
 

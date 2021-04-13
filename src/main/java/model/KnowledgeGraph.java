@@ -5,9 +5,6 @@ import exceptions.NoLinkedNodeException;
 import model.link.Link;
 import model.node.Node;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -367,17 +364,26 @@ public class KnowledgeGraph {
      */
     public List<Node> depthFirstSearch(Node origin, Node destination, List<Node> occurred) {
 
-        if (origin.equals(destination))
-            return occurred;
+        System.err.println(origin);
 
         if (occurred == null)
             occurred = new ArrayList<>();
+
+        if (origin.equals(destination)) {
+            occurred.add(destination);
+            return occurred;
+        }
+
         occurred.add(origin);
 
-        for (Link link : origin.getLinks())
-            if (link.getFrom().equals(origin))
-                if (!occurred.contains(link.getTo()))
-                    return depthFirstSearch(link.getTo(), destination, occurred);
+        for (Link link : origin.getLinks()) {
+            try {
+                Node neighbour = link.getLinkedNode(origin);
+                if (!occurred.contains(neighbour))
+                    return depthFirstSearch(neighbour, destination, occurred);
+            } catch (NoLinkedNodeException ignored) {
+            }
+        }
 
         return null;
     }

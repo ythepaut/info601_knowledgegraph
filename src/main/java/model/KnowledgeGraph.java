@@ -5,9 +5,6 @@ import exceptions.NoLinkedNodeException;
 import model.link.Link;
 import model.node.Node;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,32 +91,39 @@ public class KnowledgeGraph {
      * Deletes the link in argument form the graph.
      * @param linkToRemove      Link        link to remove
      * @param deleteSameType    boolean     if true, all link of the same type as linkToRemove will be removed
+     * @return                              true if the link has been deleted
      */
-    public void removeLink(Link linkToRemove, boolean deleteSameType) {
-        // node references deletion
-        linkToRemove.getFrom().removeLink(linkToRemove);
-        linkToRemove.getTo().removeLink(linkToRemove);
+    public boolean removeLink(Link linkToRemove, boolean deleteSameType) {
+        if (this.links.contains(linkToRemove)) {
 
-        // global list deletion
-        this.links.remove(linkToRemove);
+            // node references deletion
+            linkToRemove.getFrom().removeLink(linkToRemove);
+            linkToRemove.getTo().removeLink(linkToRemove);
 
-        if (deleteSameType) {
-            List<Link> linksToRemove = new ArrayList<>();
+            // global list deletion
+            this.links.remove(linkToRemove);
 
-            for (Link link : this.links) {
-                // the link will be removed if it has the same class
-                // as the one passed in parameter
-                if ( link.getClass().isInstance(linkToRemove) ){
-                    linksToRemove.add(link);
+            // all other link of the same type deletion
+            if (deleteSameType) {
+                List<Link> linksToRemove = new ArrayList<>();
+
+                for (Link link : this.links) {
+                    // the link will be removed if it has the same class
+                    // as the one passed in parameter
+                    if ( link.getClass().isInstance(linkToRemove) ){
+                        linksToRemove.add(link);
+                    }
+                }
+                // we remove definitely the links in a new loop to avoid border effect
+                for (Link link : linksToRemove) {
+                    link.getFrom().removeLink(link);
+                    link.getTo().removeLink(link);
+                    this.links.remove(link);
                 }
             }
-            // we remove definitely the links in a new loop to avoid border effect
-            for (Link link : linksToRemove) {
-                link.getFrom().removeLink(link);
-                link.getTo().removeLink(link);
-                this.links.remove(link);
-            }
+            return true;
         }
+        return false;
     }
 
     /**

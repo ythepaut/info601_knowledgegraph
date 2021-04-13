@@ -255,9 +255,11 @@ public class QueryInterpretor {
             return;
         }
 
-        //TODO: lfkjgdlgfhjogidsfjghlkerjdfrsmlgvjxclkgjdflkgjfdjkgjfdlkgjfdlkjglkfdjglkfdjglkfdjtoirtpdspldù
-        //graph.todoLuchat();
-        System.out.println("Success deleted link between " + firstNode + " " + secondNode);
+        if (graph.removeLink(link, deleteAll)) {
+            System.out.println("Success deleted link between " + firstNode + " " + secondNode);
+        } else {
+            System.out.println("Error : unsuccessful link deletion " + firstNode + " " + secondNode);
+        }
     }
 
     private void exportGraph(String[] args) {

@@ -6,6 +6,7 @@ import model.link.InstanceLink;
 import model.node.ConceptNode;
 import model.node.InstanceNode;
 import model.node.Node;
+import utils.FileManager;
 import view.GraphDisplayer;
 
 import java.io.IOException;
@@ -54,8 +55,8 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        KnowledgeGraph hardcodedGraph = KnowledgeGraph.fromFile("./graph.json");
-        KnowledgeGraph searchGraph = KnowledgeGraph.fromFile("./searchGraph.json");
+        KnowledgeGraph hardcodedGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./graph.json"));
+        KnowledgeGraph searchGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./searchGraph.json"));
         KnowledgeGraph resultGraph = hardcodedGraph.search(searchGraph);
 
         GraphDisplayer.displayGraph(resultGraph);

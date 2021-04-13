@@ -1,0 +1,58 @@
+{
+    "nodes": [
+        {
+            "id": "0",
+            "type": "CONCEPT",
+            "content": {
+                "name": "Antalgique",
+                "id": "0"
+            }
+        },
+        {
+            "id": "1",
+            "type": "INSTANCE",
+            "content": {
+                "proprete": 1,
+                "name": "Doliprane",
+                "quantite": 90
+            }
+        },
+        {
+            "id": "2",
+            "type": "INSTANCE",
+            "content": {
+                "name": "Medoc"
+            }
+        },
+        {
+            "id": "3",
+            "type": "INSTANCE",
+            "content": {
+                "name": "Autre"
+            }
+        }
+    ],
+    "links": [
+        {
+            "name": "instance",
+            "from": "0",
+            "to": "1",
+            "oriented": true,
+            "type": "INSTANCE"
+        },
+        {
+            "name": "instance",
+            "from": "0",
+            "to": "2",
+            "oriented": true,
+            "type": "INSTANCE"
+        },
+        {
+            "name": "instance",
+            "from": "0",
+            "to": "3",
+            "oriented": true,
+            "type": "INSTANCE"
+        }
+    ]
+}

@@ -5,9 +5,6 @@ import exceptions.NoLinkedNodeException;
 import model.link.Link;
 import model.node.Node;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,6 +41,10 @@ public class KnowledgeGraph {
         this.nodes.removeAll(Arrays.asList(nodes));
     }
 
+    public void addLink(Link link) {
+        links.add(link);
+    }
+
     /**
      * Initializes and adds a link to the graph
      * @param nodeFrom          Node            Link's origin node
@@ -69,7 +70,7 @@ public class KnowledgeGraph {
      * Delete and adds a link to the graph
      * @param nodeFrom          Node            Link's origin node
      * @param nodeTo            Node            Link's destination node
-     * @param linkType          Class           Link type to delete
+     * @param link              Link            Link to delete
      */
     public void removeLink(Node nodeFrom, Node nodeTo, Link link) {
         List<Link> links = nodeFrom.getLinks();
@@ -91,23 +92,40 @@ public class KnowledgeGraph {
     }
 
     /**
-     * Deletes a link to of the graph
-     * @param linkToRemove      Link        link to delete
-     * @return if the deletion has been successful
+     * Deletes the link in argument form the graph.
+     * @param linkToRemove      Link        link to remove
+     * @param deleteSameType    boolean     if true, all link of the same type as linkToRemove will be removed
+     * @return                              true if the link has been deleted
      */
-    public boolean removeLink(Link linkToRemove) {
-        for (Link link : this.links) {
-            if (link.getId().equals(linkToRemove.getId())){
+    public boolean removeLink(Link linkToRemove, boolean deleteSameType) {
+        if (this.links.contains(linkToRemove)) {
 
-                // node references deletion
-                linkToRemove.getFrom().removeLink(linkToRemove);
-                linkToRemove.getTo().removeLink(linkToRemove);
+            // node references deletion
+            linkToRemove.getFrom().removeLink(linkToRemove);
+            linkToRemove.getTo().removeLink(linkToRemove);
 
-                // global list deletion
-                this.links.remove(linkToRemove);
+            // global list deletion
+            this.links.remove(linkToRemove);
 
-                return true;
+            // all other link of the same type deletion
+            if (deleteSameType) {
+                List<Link> linksToRemove = new ArrayList<>();
+
+                for (Link link : this.links) {
+                    // the link will be removed if it has the same class
+                    // as the one passed in parameter
+                    if ( link.getClass().isInstance(linkToRemove) ){
+                        linksToRemove.add(link);
+                    }
+                }
+                // we remove definitely the links in a new loop to avoid border effect
+                for (Link link : linksToRemove) {
+                    link.getFrom().removeLink(link);
+                    link.getTo().removeLink(link);
+                    this.links.remove(link);
+                }
             }
+            return true;
         }
         return false;
     }
@@ -220,14 +238,19 @@ public class KnowledgeGraph {
      */
     public static KnowledgeGraph fromJSON(String json) throws JSONException {
         KnowledgeGraph graph = new KnowledgeGraph();
-
         JSONObject main = new JSONObject(json);
+
+        int maxId = 0;
 
         JSONArray nodes = main.getJSONArray("nodes");
         for (Object nodeObject : nodes) {
             Node node = Node.fromJSONObject((JSONObject) nodeObject);
             graph.addNodes(node);
+            if (Integer.parseInt(node.getId()) > maxId) {
+                maxId = Integer.parseInt(node.getId());
+            }
         }
+        Node.setNextId(maxId + 1);
 
         JSONArray links = main.getJSONArray("links");
         for (Object linkObject : links) {
@@ -252,19 +275,66 @@ public class KnowledgeGraph {
         return KnowledgeGraph.fromJSON(total.toString());
     }
 
-    public KnowledgeGraph search(KnowledgeGraph other) {
-        KnowledgeGraph result = new KnowledgeGraph();
+    public KnowledgeGraph search(KnowledgeGraph searchedGraph) {
+        KnowledgeGraph resultGraph = new KnowledgeGraph();
 
-        for (Node node : other.nodes) {
-            if (!node.isSearched())
+        for (Node searchedNode : searchedGraph.nodes) {
+            if (!searchedNode.isSearched())
                 continue;
 
-            /*
-            for (Link link : other.links) {
-                if (!link.getLinkedNode(node))
-            }*/
+            for (Link link : searchedGraph.links) {
+                Node foundNodeInSearchedGraph;
+                try {
+                    foundNodeInSearchedGraph = link.getLinkedNode(searchedNode);
+                } catch (Exception e) {
+                    continue;
+                }
+
+                for (Node matchedNodeInOriginalGraph : nodes) {
+                    if (!foundNodeInSearchedGraph.isSubsetOf(matchedNodeInOriginalGraph))
+                        continue;
+
+                    resultGraph.addNodes(matchedNodeInOriginalGraph);
+                    System.out.println(matchedNodeInOriginalGraph);
+
+                    for (Link possibleRelation : searchedNode.getLinks()) {
+                        List<Link> matchingLinks = matchedNodeInOriginalGraph.getMatchingLinks(searchedNode, possibleRelation);
+
+                        for (Link matchingLink : matchingLinks) {
+                            try {
+                                Node otherExtremity = matchingLink.getLinkedNode(matchedNodeInOriginalGraph);
+                                resultGraph.addNodes(otherExtremity);
+                                resultGraph.addLink(matchingLink);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        return result;
+        /*
+        System.out.println("");
+
+        for (Node node : resultGraph.nodes) {
+            System.out.println(node);
+        }
+
+        System.out.println("");
+
+        for (Link link : resultGraph.links) {
+            System.out.println(link.getFrom().getId());
+            System.out.println(link.getTo().getId());
+        }
+
+        System.out.println("");
+        */
+
+        return resultGraph;
+    }
+
+    public KnowledgeGraph path(Node origin, Node destination) {
+        return new KnowledgeGraph();
     }
 }

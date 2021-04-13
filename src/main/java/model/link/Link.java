@@ -195,4 +195,16 @@ public abstract class Link {
                 throw new JSONException("Invalid type");
         }
     }
+
+    public boolean isSubsetOf(Link other) {
+        if (!getClass().isInstance(other))
+            return false;
+
+        if (oriented || other.oriented) {
+            return (from.isSubsetOf(other.from) && to.isSubsetOf(other.to))
+                || (from.isSubsetOf(other.to) && to.isSubsetOf(other.from));
+        } else {
+            return from.isSubsetOf(other.from) && to.isSubsetOf(other.to);
+        }
+    }
 }

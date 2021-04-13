@@ -4,48 +4,60 @@
             "id": "0",
             "type": "CONCEPT",
             "content": {
-                "name": "Antalgique"
+                "name": "Maladie"
             }
         },
         {
             "id": "1",
-            "type": "INSTANCE",
+            "type": "CONCEPT",
             "content": {
-                "proprete": 1,
-                "name": "Doliprane",
-                "quantite": 90
+                "name": "Symptôme"
             }
         },
         {
             "id": "2",
             "type": "INSTANCE",
             "content": {
-                "name": "Medoc"
+                "name": "Rhume"
             }
         },
         {
             "id": "3",
             "type": "INSTANCE",
             "content": {
-                "name": "Autre"
+                "name": "Pneumonie"
             }
         },
         {
             "id": "4",
             "type": "INSTANCE",
             "content": {
-                "name": "Encore"
+                "name": "rhinopharyngite"
+            }
+        },
+        {
+            "id": "5",
+            "type": "INSTANCE",
+            "content": {
+                "name": "cancer du poumon"
+            }
+        },
+        {
+            "id": "6",
+            "type": "CONCEPT",
+            "content": {
+                "name": "Cancer"
+            }
+        },
+        {
+            "id": "7",
+            "type": "INSTANCE",
+            "content": {
+                "name": "Asthme"
             }
         }
     ],
     "links": [
-        {
-            "name": "instance",
-            "from": "0",
-            "to": "1",
-            "oriented": true,
-            "type": "INSTANCE"
-        },
         {
             "name": "instance",
             "from": "0",
@@ -61,18 +73,32 @@
             "type": "INSTANCE"
         },
         {
-            "name": "vont-mal-ensemble",
-            "from": "1",
-            "to": "3",
-            "oriented": false,
-            "type": "ASSOCIATION"
+            "name": "instance",
+            "from": "0",
+            "to": "4",
+            "oriented": true,
+            "type": "INSTANCE"
         },
         {
-            "name": "vont-bien-ensemble",
-            "from": "2",
-            "to": "4",
-            "oriented": false,
-            "type": "ASSOCIATION"
+            "name": "instance",
+            "from": "0",
+            "to": "7",
+            "oriented": true,
+            "type": "INSTANCE"
+        },
+        {
+            "name": "ako",
+            "from": "0",
+            "to": "6",
+            "oriented": true,
+            "type": "AKO"
+        },
+        {
+            "name": "instance",
+            "from": "6",
+            "to": "5",
+            "oriented": true,
+            "type": "INSTANCE"
         }
     ]
 }

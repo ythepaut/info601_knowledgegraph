@@ -95,6 +95,10 @@ public class QueryInterpretor {
             }
 
             System.out.println("Success : cleared query graph");
+        } else if (cmd.equals("graph") && args[0].equals("export")) {
+            exportGraph(args);
+        } else if (cmd.equals("graph") && args[0].equals("import")) {
+            importGraph(args);
         } else if (cmd.equals("display")) {
             GraphDisplayer.displayGraph(graph);
         } else {

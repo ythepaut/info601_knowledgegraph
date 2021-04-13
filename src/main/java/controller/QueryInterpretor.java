@@ -26,7 +26,7 @@ public class QueryInterpretor {
 
     public QueryInterpretor(KnowledgeGraph graph) {
         this.graph = graph;
-        this.querygraph = new KnowledgeGraph(true);
+        this.querygraph = new KnowledgeGraph(false);
         query = false;
     }
 
@@ -90,9 +90,9 @@ public class QueryInterpretor {
             }
         } else if (cmd.equals("clear")) {
             if (query) {
-                graph = new KnowledgeGraph(true);
+                graph = new KnowledgeGraph(false);
             } else {
-                querygraph = new KnowledgeGraph(true);
+                querygraph = new KnowledgeGraph(false);
             }
 
             System.out.println("Success : cleared query graph");

@@ -1,16 +1,13 @@
 import controller.QueryInterpretor;
 import model.KnowledgeGraph;
 import model.Property;
-import model.link.CompositionLink;
 import model.link.InstanceLink;
 import model.node.ConceptNode;
 import model.node.InstanceNode;
-import model.node.Node;
 import utils.FileManager;
 import view.GraphDisplayer;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,12 +54,13 @@ public class Main {
     public static void main(String[] args) throws IOException {
         KnowledgeGraph hardcodedGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./graph.json"));
         KnowledgeGraph searchGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./searchGraph.json"));
-        KnowledgeGraph resultGraph = hardcodedGraph.search(searchGraph);
+        KnowledgeGraph yohann = KnowledgeGraph.fromJSON(FileManager.readFile("./oskur.json"));
+        KnowledgeGraph resultGraph = hardcodedGraph.search(yohann);
 
         GraphDisplayer.displayGraph(resultGraph);
 
         KnowledgeGraph graph = new KnowledgeGraph();
-        QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
+        QueryInterpretor queryInterpretor = new QueryInterpretor(yohann);
         queryInterpretor.queryListener();
     }
 }

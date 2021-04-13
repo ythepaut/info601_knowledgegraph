@@ -174,6 +174,9 @@ public abstract class Link extends GraphElement {
             res += "from : " + this.from.getId() + " name : " + name + "to : " + this.to.getId();
         }
 
+        res += "\t\tid : " + this.id;
+        res += "\t\ttype : " + this.getClass();
+
         return res;
     }
 

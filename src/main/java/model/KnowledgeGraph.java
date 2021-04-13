@@ -21,6 +21,9 @@ public class KnowledgeGraph {
     private final List<Node> nodes;
     private final List<Link> links;
 
+    private int nodeId = 0;
+    private int linkId = 0;
+
     public KnowledgeGraph() {
         nodes = new ArrayList<>();
         links = new ArrayList<>();
@@ -101,14 +104,27 @@ public class KnowledgeGraph {
      * @return                              true if the link has been deleted
      */
     public boolean removeLink(Link linkToRemove, boolean deleteSameType) {
-        if (this.links.contains(linkToRemove)) {
+
+        // find the true link to remove in model
+        Link linkToRemoveRaw = null;
+        for (Link link : this.links) {
+            if (link.getName().equals(linkToRemove.getName()) &&
+                    link.getClass().equals(linkToRemove.getClass()) &&
+                    link.getTo().equals(linkToRemove.getTo()) &&
+                    link.getFrom().equals(linkToRemove.getFrom())) {
+                    linkToRemoveRaw = link;
+                    break;
+            }
+        }
+
+        if (linkToRemoveRaw != null) {
 
             // node references deletion
-            linkToRemove.getFrom().removeLink(linkToRemove);
-            linkToRemove.getTo().removeLink(linkToRemove);
+            linkToRemoveRaw.getFrom().removeLink(linkToRemoveRaw);
+            linkToRemoveRaw.getTo().removeLink(linkToRemoveRaw);
 
             // global list deletion
-            this.links.remove(linkToRemove);
+            this.links.remove(linkToRemoveRaw);
 
             // all other link of the same type deletion
             if (deleteSameType) {
@@ -117,7 +133,7 @@ public class KnowledgeGraph {
                 for (Link link : this.links) {
                     // the link will be removed if it has the same class
                     // as the one passed in parameter
-                    if ( link.getClass().isInstance(linkToRemove) ){
+                    if ( link.getClass().isInstance(linkToRemoveRaw) ){
                         linksToRemove.add(link);
                     }
                 }
@@ -211,6 +227,15 @@ public class KnowledgeGraph {
 
     public List<Link> getLinks() {
         return links;
+    }
+
+    public Link getLink(String id) {
+        for (Link link : links) {
+            if (link.getId().equals(id)) {
+                return link;
+            }
+        }
+        return null;
     }
 
     /**

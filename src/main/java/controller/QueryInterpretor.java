@@ -306,10 +306,11 @@ public class QueryInterpretor {
             return;
         }
 
+        // FIXME the link id does not exists in model
         if (graph.removeLink(link, deleteAll)) {
             System.out.println("Success deleted link between " + firstNode + " " + secondNode);
         } else {
-            System.out.println("Error : unsuccessful link deletion " + firstNode + " " + secondNode);
+            System.err.println("Error : unsuccessful link deletion " + firstNode + " " + secondNode);
         }
     }
 

@@ -357,33 +357,97 @@ public class KnowledgeGraph {
     }
 
     /**
-     * Depth-First Search
-     *
-     * @param origin   Node from which we start
-     * @param occurred Nodes we already ran through
+     * Returns the complement of two graphs
+     * @param graph1        First graph
+     * @param graph2        Second graph
+     * @return KnowledgeGraph
      */
-    public List<Node> depthFirstSearch(Node origin, Node destination, List<Node> occurred) {
+    public static KnowledgeGraph complement(KnowledgeGraph graph1, KnowledgeGraph graph2) {
+        List<Node> nodes = new ArrayList<>();
+        for (Node node : graph1.nodes)
+            if (!graph2.nodes.contains(node))
+                nodes.add(node);
+        KnowledgeGraph result = new KnowledgeGraph(graph1.inherit);
+        Node[] nodeArray = new Node[nodes.size()];
+        nodeArray = nodes.toArray(nodeArray);
+        result.addNodes(nodeArray);
+        return result;
+    }
 
-        if (occurred == null)
-            occurred = new ArrayList<>();
+    /**
+     * Dijskra's algorithm : Finds the shortest path between two nodes
+     * @param origin        Origin Node
+     * @param destination   Destination Node
+     * @return              List of the nodes to get from origin to destination
+     */
+    public List<Node> dijskra(Node origin, Node destination) {
 
-        if (origin.equals(destination)) {
-            occurred.add(destination);
-            return occurred;
-        }
+        // weight[i] représente le poids du noeud i (nodes[i]), -1 pour poids infini (par défaut)
+        int[] weights = new int[nodes.size()];
+        Arrays.fill(weights, -1);
 
-        occurred.add(origin);
+        // pathsBy[i] représente le noeud par lequel le chemin est le plus court pour le noeud i
+        Node[] pathsBy = new Node[nodes.size()];
 
-        for (Link link : origin.getLinks()) {
-            try {
-                Node neighbour = link.getLinkedNode(origin);
-                if (!occurred.contains(neighbour))
-                    return depthFirstSearch(neighbour, destination, occurred);
-            } catch (NoLinkedNodeException ignored) {
+        // Sous-graph contenant les noeuds parcourus
+        KnowledgeGraph sub = new KnowledgeGraph(inherit);
+
+        // Initialisation du coût à l'origine à 0 (weight[origine] = 0)
+        weights[nodes.indexOf(origin)] = 0;
+
+        // Tant qu'il existe un noeud qui n'est pas présent dans le sous graph sub
+        KnowledgeGraph complement;
+        do {
+            complement = complement(this, sub);
+
+            // Cherche le noeud de plus petite distance qui n'est pas dans sub
+            int nodeIndex = -1;
+            for (int i = 0 ; i < weights.length ; ++i)
+                if (!sub.nodes.contains(nodes.get(i)))
+                    if (nodeIndex == -1 || (weights[i] < weights[nodeIndex] && weights[i] != -1))
+                        nodeIndex = i;
+            Node shortestNodeA = nodes.get(nodeIndex);
+
+            // Ajout du noeud le plus "court" dans le sous graph
+            sub.addNodes(shortestNodeA);
+
+            // Pour tous les sommets voisins du noeud le plus court, sauf les noeuds dans le sous graph sub
+            for (Node nodeB : shortestNodeA.getNeighbours()) {
+                if (!sub.nodes.contains(nodeB)) {
+
+                    int weightA = weights[nodes.indexOf(shortestNodeA)];
+                    int weightB = weights[nodes.indexOf(nodeB)];
+                    int weigthAB = 1; // TODO change to put weight on links
+
+                    // Si poids du noeud courant > poids noeud le plus court + poids entre les deux noeuds
+                    if ((weightB == -1 || weightB > weightA + weigthAB) && weightA != -1) {
+
+                        // Affectation du nouveau poids du noeud B
+                        weights[nodes.indexOf(nodeB)] = weightA + weigthAB;
+
+                        // Modification du prédecesseur de B, à A
+                        pathsBy[nodes.indexOf(nodeB)] = shortestNodeA;
+                    }
+                }
             }
+
+        } while (complement.nodes.size() > 1);
+
+        // Debug : Affichage de tous les noeuds avec les poids et chemins
+        for (int i = 0 ; i < weights.length ; ++i) {
+            System.err.println(nodes.get(i) + "\t : " + weights[i] + "\tby " + (pathsBy[i] != null ? pathsBy[i] : "-"));
         }
 
-        return null;
+        // Construction du chemin
+        List<Node> path = new ArrayList<>();
+        Node currentNode = destination;
+        do {
+            path.add(currentNode);
+            currentNode = pathsBy[nodes.indexOf(currentNode)];
+        } while (!currentNode.equals(origin));
+        path.add(origin);
+
+        return path;
     }
 
     public boolean shouldInherit() {

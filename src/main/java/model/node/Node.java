@@ -225,6 +225,16 @@ public abstract class Node extends GraphElement {
         return true;
     }
 
+    public List<Node> getNeighbours() {
+        List<Node> neighbours = new ArrayList<>();
+        for (Link link : links)
+            if (link.getFrom().equals(this))
+                neighbours.add(link.getTo());
+            else
+                neighbours.add(link.getFrom());
+        return neighbours;
+    }
+
     public static void setNextId(int nextId) {
         NEXT_ID = nextId;
     }

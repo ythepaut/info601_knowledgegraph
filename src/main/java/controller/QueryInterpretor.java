@@ -100,7 +100,7 @@ public class QueryInterpretor {
             Node origin = graph.findNode(args[1]);
             Node destination = graph.findNode(args[2]);
             System.out.println("Recherche de " + origin + " à " + destination + "...");
-            System.out.println(graph.depthFirstSearch(origin, destination, new ArrayList<>()));
+            System.out.println(graph.dijskra(origin, destination));
         } else if (cmd.equals("display")) {
             GraphDisplayer.displayGraph(graph);
         } else {

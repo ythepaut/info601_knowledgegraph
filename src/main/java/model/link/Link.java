@@ -171,7 +171,7 @@ public abstract class Link extends GraphElement {
                 res += " to : " + getLinkedNode(from).getId();
             } catch (NoLinkedNodeException ignored) {}
         } else {
-            res += "from : " + this.from.getId() + " name : " + name + "to : " + this.to.getId();
+            res += "from : " + this.from.getId() + " name : " + name + " to : " + this.to.getId();
         }
 
         return res;

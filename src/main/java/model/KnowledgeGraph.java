@@ -179,6 +179,20 @@ public class KnowledgeGraph {
         return found;
     }
 
+    public List<Link> findLinks(Link template) {
+        List<Link> found = new ArrayList<Link>();
+
+        for (Link link : template.getTo().getLinks()) {
+            try {
+                if (link.getLinkedNode(template.getTo()).equals(template.getFrom())) {
+                    found.add(link);
+                }
+            } catch (NoLinkedNodeException e) { }
+        }
+
+        return found;
+    }
+
     /**
      * Find a node according to its id
      *

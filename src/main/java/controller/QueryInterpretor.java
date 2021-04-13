@@ -75,6 +75,8 @@ public class QueryInterpretor {
             addLink(args);
         } else if (cmd.equals("link") && args.length > 0 && args[0].equals("del")) {
             deleteLink(args);
+        } else if (cmd.equals("link") && args.length > 0 && args[0].equals("find")) {
+            findLink(args);
         } else if (cmd.equals("link") && args.length > 0 && args[0].equals("list")) {
             linkList();
         } else if (cmd.equals("switchGraph")) {
@@ -318,6 +320,67 @@ public class QueryInterpretor {
         }
     }
 
+    private void findLink(String[] args) {
+        if (args.length < 4) {
+            System.err.println("Syntax error. Use `link find [LinkType] [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]`");
+            return;
+        }
+
+        Link link;
+        int nodeIdIndex = 2;
+        if (args[1].equalsIgnoreCase("ako")) {
+            link = new AkoLink();
+        } else if (args[1].equalsIgnoreCase("association")) {
+            link = new AssociationLink();
+        } else if (args[1].equalsIgnoreCase("composition")) {
+            if (args.length < 5) {
+                System.out.println("Error: not enough arguments");
+                return;
+            }
+            if (args[2].equalsIgnoreCase("oriented")) {
+                link = new CompositionLink(true);
+            } else if (args[2].equalsIgnoreCase("nonoriented")) {
+                link = new CompositionLink(false);
+            } else {
+                System.err.println("Error: no orientation specified");
+                return;
+            }
+            nodeIdIndex++;
+        } else if (args[1].equalsIgnoreCase("instance")) {
+            link = new InstanceLink();
+        } else {
+            System.err.println("Error: no valid TypeLink specified");
+            return;
+        }
+
+        Node firstNode = graph.findNode(args[nodeIdIndex]);
+        Node secondNode = graph.findNode(args[nodeIdIndex + 1]);
+
+        if (secondNode == null || firstNode == null) {
+            System.out.println("Error: no nodes corresponding");
+            return;
+        }
+
+        try {
+            link.setFrom(firstNode);
+            link.setTo(secondNode);
+        } catch (IllegalLinkAssociationException e) {
+            System.err.println("Error : link cannot exist illegal association");
+            return;
+        }
+
+        List<Link> links = graph.findLinks(link);
+        if (links.size() == 0) {
+            System.err.println("Error : no corresponding link found");
+        } else {
+            System.out.println("Links found\n===================");
+            for (Link linkPrint : links) {
+                System.out.println(linkPrint.toDetailedString(null));
+                System.out.println("===================");
+            }
+        }
+    }
+
     private void linkList() {
         System.out.println("All Links\n===================");
         for (Link link : graph.getLinks()) {
@@ -402,12 +465,13 @@ public class QueryInterpretor {
                 "node list",
                 "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "link del <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
+                "link find <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "link list",
                 "switchGraph",
                 "findQuery",
                 "clear",
-                "import <graphPath>",
-                "export <graphPath>",
+                "graph import <graphPath>",
+                "graph export <graphPath>",
                 "display",
                 "exit"
         };

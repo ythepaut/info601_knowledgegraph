@@ -23,16 +23,15 @@ public abstract class Node {
     private final Map<String, Property<?>> properties;
 
     private final String id;
+    private final boolean search;
 
     public Node(Map<String, Property<?>> properties) {
-        this.id = Integer.toString(Node.NEXT_ID++);
-        this.properties = properties;
-        this.properties.put("id", new Property<>(this.id));
-        this.links = new ArrayList<>();
+        this(properties, Integer.toString(Node.NEXT_ID++), false);
     }
 
-    public Node(Map<String, Property<?>> properties, String id) {
+    public Node(Map<String, Property<?>> properties, String id, boolean search) {
         this.id = id;
+        this.search = search;
         this.properties = properties;
         this.properties.put("id", new Property<>(this.id));
         this.links = new ArrayList<>();
@@ -48,15 +47,17 @@ public abstract class Node {
 
     /**
      * Gets the node type name (i.e. Concept, Instance)
-     * @return                                  Node tpye name
+     *
+     * @return Node tpye name
      */
     public abstract String getName();
 
     /**
      * Returns all of the connected links of the node
      * which equals to the one passed in parameter.
-     * @param link              Link            link to compare
-     * @return                  List<Link>
+     *
+     * @param link Link            link to compare
+     * @return List<Link>
      */
     public List<Link> getLinks(Link link) {
         List<Link> links = new ArrayList<>();
@@ -69,8 +70,9 @@ public abstract class Node {
     /**
      * Returns all of the connected links of the node
      * which are of the same class as the one passed in paramater.
-     * @param linkClass         Class           class to compare
-     * @return                  List<Link>
+     *
+     * @param linkClass Class           class to compare
+     * @return List<Link>
      */
     public List<Link> getLinks(Class<? extends Link> linkClass) {
         List<Link> links = new ArrayList<>();
@@ -84,7 +86,8 @@ public abstract class Node {
 
     /**
      * Removes the node attached link passed in parameters.
-     * @param link              Link            Link to remove
+     *
+     * @param link Link            Link to remove
      */
     public void removeLink(Link link) {
         this.links.remove(link);
@@ -146,12 +149,17 @@ public abstract class Node {
         Map<String, Property<?>> properties = getPropertiesFromJSON(obj.getJSONObject("content"));
         String id = obj.getString("id");
 
+        boolean search = false;
+        try {
+            search = obj.getBoolean("search");
+        } catch (JSONException ignored) {}
+
         switch (obj.getString("type")) {
             case "CONCEPT":
-                return new ConceptNode(properties, id);
+                return new ConceptNode(properties, id, search);
 
             case "INSTANCE":
-                return new InstanceNode(properties, id);
+                return new InstanceNode(properties, id, search);
 
             default:
                 throw new JSONException("Invalid type");
@@ -176,5 +184,21 @@ public abstract class Node {
             return id.equals(((Node) other).id);
 
         return false;
+    }
+
+    public boolean isIdentical(Node other) {
+        return properties.equals(other.properties);
+    }
+
+    public boolean isSubsetOf(Node other) {
+        for (String key : properties.keySet())
+            if (other.properties.get(key) == null || !other.properties.get(key).equals(properties.get(key)))
+                return false;
+
+        return true;
+    }
+
+    public boolean isSearched() {
+        return search;
     }
 }

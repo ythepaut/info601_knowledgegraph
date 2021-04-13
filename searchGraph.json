@@ -3,7 +3,9 @@
         {
             "id": "100",
             "type": "CONCEPT",
-            "content": {}
+            "content": {
+                "name": "Antalgique"
+            }
         },
         {
             "id": "101",

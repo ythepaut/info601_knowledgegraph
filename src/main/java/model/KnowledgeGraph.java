@@ -261,4 +261,8 @@ public class KnowledgeGraph {
 
         return result;
     }
+
+    public KnowledgeGraph path(Node origin, Node destination) {
+        return new KnowledgeGraph();
+    }
 }

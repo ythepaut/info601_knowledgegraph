@@ -32,7 +32,7 @@
             "id": "4",
             "type": "INSTANCE",
             "content": {
-                "name": "rhinopharyngite"
+                "name": "Bronchite"
             }
         },
         {
@@ -54,6 +54,13 @@
             "type": "INSTANCE",
             "content": {
                 "name": "Asthme"
+            }
+        },
+        {
+            "id": "8",
+            "type": "INSTANCE",
+            "content": {
+                "name": "toux sèche"
             }
         }
     ],
@@ -88,8 +95,8 @@
         },
         {
             "name": "ako",
-            "from": "0",
-            "to": "6",
+            "from": "6",
+            "to": "0",
             "oriented": true,
             "type": "AKO"
         },
@@ -99,6 +106,34 @@
             "to": "5",
             "oriented": true,
             "type": "INSTANCE"
+        },
+        {
+            "name": "instance",
+            "from": "1",
+            "to": "8",
+            "oriented": true,
+            "type": "INSTANCE"
+        },
+        {
+            "name": "has",
+            "from": "4",
+            "to": "8",
+            "oriented": true,
+            "type": "ASSOCIATION"
+        },
+        {
+            "name": "has",
+            "from": "3",
+            "to": "8",
+            "oriented": true,
+            "type": "ASSOCIATION"
+        },
+        {
+            "name": "has",
+            "from": "5",
+            "to": "8",
+            "oriented": true,
+            "type": "ASSOCIATION"
         }
     ]
 }

@@ -1,6 +1,7 @@
 package view;
 
 import model.KnowledgeGraph;
+import model.link.AkoLink;
 import model.link.Link;
 import model.node.Node;
 import org.graphstream.graph.Edge;
@@ -58,6 +59,10 @@ public class GraphDisplayer {
                 if (link.getFrom().equals(node)) {
                     Node from = link.getFrom();
                     Node to = link.getTo();
+                    if (link instanceof AkoLink) {
+                        from = link.getTo();
+                        to = link.getFrom();
+                    }
                     Edge edge = result.addEdge(from.getId() + "-" + to.getId(), resultNodes.get(from.getId()), resultNodes.get(to.getId()), link.isOriented());
                     edge.setAttribute("ui.class", link.getName());
                     edge.setAttribute("ui.label", link.toString());

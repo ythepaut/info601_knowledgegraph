@@ -59,7 +59,7 @@ public abstract class Link {
     public abstract boolean isSameLink(Link other);
 
     /**
-     * Get a note depending of the other extremity
+     * Get a node depending of the other extremity
      * @param other Other node
      * @return Other extremity
      * @throws UninitializedLinkException When using an uninitialized link

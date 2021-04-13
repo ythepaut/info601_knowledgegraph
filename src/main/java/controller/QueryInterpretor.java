@@ -18,10 +18,16 @@ import java.util.List;
 
 public class QueryInterpretor {
 
-    private final KnowledgeGraph graph;
+    private KnowledgeGraph graph;
+
+    private KnowledgeGraph querygraph;
+
+    private boolean query;
 
     public QueryInterpretor(KnowledgeGraph graph) {
         this.graph = graph;
+        this.querygraph = new KnowledgeGraph();
+        query = false;
     }
 
     /**
@@ -56,26 +62,54 @@ public class QueryInterpretor {
     private void executeQuery(String cmd, String[] args) {
         if (cmd.equals("help")) {
             printHelp();
-        } else if (cmd.equals("node") && args[0].equals("add") && !args[1].equals("")) {
+        } else if (cmd.equals("node") && args.length > 0 && args[0].equals("add") && !args[1].equals("")) {
             addNode(args);
-        } else if (cmd.equals("node") && args[0].equals("del")) {
+        } else if (cmd.equals("node") && args.length > 0 && args[0].equals("del")) {
             deleteNode(args);
-        } else if (cmd.equals("node") && args[0].equals("find")) {
+        } else if (cmd.equals("node") && args.length > 0 && args[0].equals("find")) {
             findNode(args);
-        } else if (cmd.equals("node") && args[0].equals("list")) {
+        } else if (cmd.equals("node") && args.length > 0 && args[0].equals("list")) {
             listNode();
-        } else if (cmd.equals("link") && args[0].equals("add")) {
+        } else if (cmd.equals("link") && args.length > 0 && args[0].equals("add")) {
             addLink(args);
-        } else if (cmd.equals("link") && args[0].equals("del")) {
+        } else if (cmd.equals("link") && args.length > 0 && args[0].equals("del")) {
             deleteLink(args);
-        } else if (cmd.equals("display")) {
+        } else if (cmd.equals("qg")) {
+            switchGraph();
+        } else if (cmd.equals("findQuery")) {
+            //TODO: Rominos111111111111111111111111111111111111111111111111111111111111111111111111
+            System.out.println("trying to find the patterns with the query Knowledge Graph ...");
+            System.out.println("not implemented yet");
+        } else if (cmd.equals("clear")) {
+            querygraph = new KnowledgeGraph();
+            System.out.println("Success : cleared query graph");
+        } else if (cmd.equals("delete")) {
             GraphDisplayer.displayGraph(graph);
         } else {
             System.out.println("Error: no suitable command found");
         }
     }
 
+    private void switchGraph() {
+        this.query = !this.query;
+
+        if (this.query){
+            System.out.println("Switching to the query knowledge grah\n you can now enter your query items");
+        } else {
+            System.out.println("Switching to the knowledge grah\n you can now enter your data");
+        }
+
+        KnowledgeGraph tmp = graph;
+        graph = querygraph;
+        querygraph = tmp;
+    }
+
     private void addNode(String[] args) {
+        if (args.length < 2) {
+            System.out.println("Error: not enough arguments");
+            return;
+        }
+
         HashMap<String, Property<?>> properties = new HashMap<>();
         getNextProperties(properties, args, 2);
 
@@ -94,6 +128,11 @@ public class QueryInterpretor {
     }
 
     private void deleteNode(String[] args) {
+        if (args.length < 2) {
+            System.out.println("Error: not enough arguments");
+            return;
+        }
+
         HashMap<String, Property<?>> properties = new HashMap<>();
         List<Node> nodes = new ArrayList<>();
 
@@ -117,6 +156,11 @@ public class QueryInterpretor {
     }
 
     private void findNode(String[] args) {
+        if (args.length < 2) {
+            System.out.println("Error: not enough arguments");
+            return;
+        }
+
         List<Node> nodes = new ArrayList<>();
         if (args[1].split(":").length != 2) {
             nodes.add(graph.findNode(args[1]));
@@ -150,6 +194,7 @@ public class QueryInterpretor {
             System.out.println("Error: not enough arguments");
             return;
         }
+
         int nodeIdIndex = 2;
         Link link;
         if (args[1].equalsIgnoreCase("ako")) {
@@ -263,6 +308,18 @@ public class QueryInterpretor {
         }
     }
 
+    private void getSuccess(Node node, HashMap<String, Property<?>> properties) {
+        for (String key : properties.keySet()) {
+            if (key.equalsIgnoreCase("search")) {
+                if (properties.get(key).getValue().equals("true")) {
+                    //TODo: roming
+                } else {
+
+                }
+            }
+        }
+    }
+
     private static HashMap<String, Property<?>> getNextProperties (String[] args, int basePointer) {
         if (args.length <= basePointer) {
             return null;
@@ -287,12 +344,14 @@ public class QueryInterpretor {
                 "",
                 "help",
                 "node add <NodeType> [Attribute name]:[Attribute value]",
-                "node del <ID> [Attribute1 name]:[Attribute1 value] [Attribute2 name]:[Attribute2 value]...",
-                "node find <ID> [Attribute1 name]:[Attribute1 value] [Attribute2 name]:[Attribute2 value]...",
+                "node del [ID] | [Attribute1 name]:[Attribute1 value] [Attribute2 name]:[Attribute2 value]...",
+                "node find [ID] | [Attribute1 name]:[Attribute1 value] [Attribute2 name]:[Attribute2 value]...",
                 "node list",
                 "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "link del <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
-                "find ",
+                "qg",
+                "find",
+                "clear",
                 "display",
                 "exit"
         };

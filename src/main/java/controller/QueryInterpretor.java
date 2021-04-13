@@ -81,16 +81,21 @@ public class QueryInterpretor {
         } else if (cmd.equals("qg")) {
             switchGraph();
         } else if (cmd.equals("findQuery")) {
-            if (query)
-                System.out.println(graph.search(querygraph));
-            else
-                System.out.println(querygraph.search(graph));
             System.out.println("trying to find the patterns with the query Knowledge Graph ...");
-            System.out.println("not implemented yet");
+            if (query) {
+                GraphDisplayer.displayGraph(querygraph.search(graph));
+            } else {
+                GraphDisplayer.displayGraph(graph.search(querygraph));
+            }
         } else if (cmd.equals("clear")) {
-            querygraph = new KnowledgeGraph();
+            if (query) {
+                graph = new KnowledgeGraph();
+            } else {
+                querygraph = new KnowledgeGraph();
+            }
+
             System.out.println("Success : cleared query graph");
-        } else if (cmd.equals("delete")) {
+        } else if (cmd.equals("display")) {
             GraphDisplayer.displayGraph(graph);
         } else {
             System.err.println("Error: command not found");
@@ -349,13 +354,11 @@ public class QueryInterpretor {
         }
     }
 
-    private void getSuccess(Node node, HashMap<String, Property<?>> properties) {
+    private void getSearch(Node node, HashMap<String, Property<?>> properties) {
         for (String key : properties.keySet()) {
             if (key.equalsIgnoreCase("search")) {
                 if (properties.get(key).getValue().equals("true"))
-                    graph.search(querygraph);
-                else
-                    querygraph.search(graph);
+                    node.setSearch(true);
                 properties.remove(key, properties.get(key));
             }
         }

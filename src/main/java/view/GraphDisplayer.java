@@ -24,6 +24,7 @@ public class GraphDisplayer {
         Graph convertedGraph = convertGraph(graph);
         convertedGraph.setAttribute("ui.quality");
         convertedGraph.setAttribute("ui.antialias");
+        convertedGraph.setAttribute("ui.title", "KnowledgeGraph");
 
         System.setProperty("org.graphstream.ui", "swing");
         if (viewer != null) {

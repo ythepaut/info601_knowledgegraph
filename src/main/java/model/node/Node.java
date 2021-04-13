@@ -47,7 +47,7 @@ public abstract class Node extends GraphElement {
     /**
      * Gets the node type name (i.e. Concept, Instance)
      *
-     * @return Node tpye name
+     * @return Node type name
      */
     public abstract String getName();
 
@@ -70,7 +70,8 @@ public abstract class Node extends GraphElement {
      * Returns all of the connected links of the node
      * which equals to the one passed in parameter.
      *
-     * @param link Link            link to compare
+     * @param other Node
+     * @param relation Link
      * @return List<Link>
      */
     public List<Link> getMatchingLinks(Node other, Link relation) {
@@ -84,7 +85,7 @@ public abstract class Node extends GraphElement {
 
     /**
      * Returns all of the connected links of the node
-     * which are of the same class as the one passed in paramater.
+     * which are of the same class as the one passed in parameter.
      *
      * @param linkClass Class           class to compare
      * @return List<Link>
@@ -120,7 +121,7 @@ public abstract class Node extends GraphElement {
     public String toDetailedString() {
         StringBuilder res = new StringBuilder();
 
-        res.append("id : " + this.id + "\n");
+        res.append("id : ").append(this.id).append("\n");
 
         Object[] keys = this.properties.keySet().toArray();
         Object[] values = this.properties.values().toArray();
@@ -130,7 +131,7 @@ public abstract class Node extends GraphElement {
 
         res.append("Links:\n");
         for (Link link : getLinks()) {
-            res.append(link.toDetailedString(this) + "\n");
+            res.append(link.toDetailedString(this)).append("\n");
         }
 
         return res.toString();

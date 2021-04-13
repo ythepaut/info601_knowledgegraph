@@ -11,7 +11,11 @@ public class ConceptNode extends Node {
     }
 
     protected ConceptNode(Map<String, Property<?>> properties, String id) {
-        super(properties, id);
+        this(properties, id, false);
+    }
+
+    protected ConceptNode(Map<String, Property<?>> properties, String id, boolean search) {
+        super(properties, id, search);
     }
 
     @Override

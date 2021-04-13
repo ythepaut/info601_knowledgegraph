@@ -5,6 +5,9 @@ import exceptions.NoLinkedNodeException;
 import model.link.Link;
 import model.node.Node;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -84,6 +87,29 @@ public class KnowledgeGraph {
         }
         nodeFrom.removeLink(myLink);
         nodeTo.removeLink(myLink);
+        links.remove(myLink);
+    }
+
+    /**
+     * Deletes a link to of the graph
+     * @param linkToRemove      Link        link to delete
+     * @return if the deletion has been successful
+     */
+    public boolean removeLink(Link linkToRemove) {
+        for (Link link : this.links) {
+            if (link.getId().equals(linkToRemove.getId())){
+
+                // node references deletion
+                linkToRemove.getFrom().removeLink(linkToRemove);
+                linkToRemove.getTo().removeLink(linkToRemove);
+
+                // global list deletion
+                this.links.remove(linkToRemove);
+
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -213,5 +239,32 @@ public class KnowledgeGraph {
         }
 
         return graph;
+    }
+
+    public static KnowledgeGraph fromFile(String path) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        String currentLine;
+        StringBuilder total = new StringBuilder();
+        while ((currentLine = reader.readLine()) != null) {
+            total.append(currentLine);
+        }
+
+        return KnowledgeGraph.fromJSON(total.toString());
+    }
+
+    public KnowledgeGraph search(KnowledgeGraph other) {
+        KnowledgeGraph result = new KnowledgeGraph();
+
+        for (Node node : other.nodes) {
+            if (!node.isSearched())
+                continue;
+
+            /*
+            for (Link link : other.links) {
+                if (!link.getLinkedNode(node))
+            }*/
+        }
+
+        return result;
     }
 }

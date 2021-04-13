@@ -1,0 +1,26 @@
+{
+    "nodes": [
+        {
+            "id": "100",
+            "type": "CONCEPT",
+            "content": {
+                "name": "Antalgique"
+            }
+        },
+        {
+            "id": "101",
+            "type": "INSTANCE",
+            "search": true,
+            "content": {}
+        }
+    ],
+    "links": [
+        {
+            "name": "instance",
+            "from": "100",
+            "to": "101",
+            "oriented": true,
+            "type": "INSTANCE"
+        }
+    ]
+}

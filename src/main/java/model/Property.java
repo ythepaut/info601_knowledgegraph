@@ -27,4 +27,9 @@ public class Property<T> {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

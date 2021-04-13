@@ -124,6 +124,7 @@ public class QueryInterpretor {
 
         HashMap<String, Property<?>> properties = new HashMap<>();
         getNextProperties(properties, args, 2);
+        boolean search = getSearch(properties);
 
         Node node;
         if (args[1].equalsIgnoreCase("concept")) {
@@ -134,6 +135,7 @@ public class QueryInterpretor {
             System.err.println("Error: " + args[1] + " is not a Node type");
             return;
         }
+        node.setSearch(search);
 
         graph.addNodes(node);
         System.out.println("Successfully created node " + node);
@@ -354,14 +356,17 @@ public class QueryInterpretor {
         }
     }
 
-    private void getSearch(Node node, HashMap<String, Property<?>> properties) {
+    private boolean getSearch(HashMap<String, Property<?>> properties) {
         for (String key : properties.keySet()) {
             if (key.equalsIgnoreCase("search")) {
-                if (properties.get(key).getValue().equals("true"))
-                    node.setSearch(true);
+                boolean isTrue = properties.get(key).getValue().equals("true");
                 properties.remove(key, properties.get(key));
+                if (isTrue) {
+                    return true;
+                }
             }
         }
+        return false;
     }
 
     private static HashMap<String, Property<?>> getNextProperties (String[] args, int basePointer) {

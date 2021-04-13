@@ -59,7 +59,7 @@ public class Main {
         KnowledgeGraph searchGraph = KnowledgeGraph.fromJSON(FileManager.readFile("./searchGraph.json"));
         KnowledgeGraph resultGraph = hardcodedGraph.search(searchGraph);
 
-        GraphDisplayer.displayGraph(resultGraph);
+        //GraphDisplayer.displayGraph(resultGraph);
 
         KnowledgeGraph graph = new KnowledgeGraph();
         QueryInterpretor queryInterpretor = new QueryInterpretor(graph);

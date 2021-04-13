@@ -6,8 +6,6 @@ import model.node.Node;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.ui.graphicGraph.GraphicGraph;
-import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 
 import java.util.HashMap;
@@ -18,7 +16,8 @@ public class GraphDisplayer {
 
     /**
      * Displays the graph
-     * @param graph             KnowledgeGraph  Knowledge graph to display
+     *
+     * @param graph KnowledgeGraph  Knowledge graph to display
      */
     public static void displayGraph(KnowledgeGraph graph) {
         Graph convertedGraph = convertGraph(graph);
@@ -37,8 +36,9 @@ public class GraphDisplayer {
 
     /**
      * Converts the graph from the project model to the library model
-     * @param graph             KnowledgeGraph  Our graph from the project
-     * @return                                  Graph (GraphStream's model)
+     *
+     * @param graph KnowledgeGraph  Our graph from the project
+     * @return Graph (GraphStream's model)
      */
     private static Graph convertGraph(KnowledgeGraph graph) {
 

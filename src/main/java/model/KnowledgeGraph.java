@@ -5,9 +5,6 @@ import exceptions.NoLinkedNodeException;
 import model.link.Link;
 import model.node.Node;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +25,8 @@ public class KnowledgeGraph {
 
     /**
      * Adds nodes to the graph
-     * @param nodes             Node[]          Nodes to add
+     *
+     * @param nodes Node[]          Nodes to add
      */
     public void addNodes(Node... nodes) {
         for (Node node : nodes)
@@ -38,7 +36,8 @@ public class KnowledgeGraph {
 
     /**
      * Removes nodes from the graph
-     * @param nodes             Node[]          Nodes to remove
+     *
+     * @param nodes Node[]          Nodes to remove
      */
     public void removeNodes(Node... nodes) {
         this.nodes.removeAll(Arrays.asList(nodes));
@@ -50,9 +49,10 @@ public class KnowledgeGraph {
 
     /**
      * Initializes and adds a link to the graph
-     * @param nodeFrom          Node            Link's origin node
-     * @param nodeTo            Node            Link's destination node
-     * @param link              Link            Link to add
+     *
+     * @param nodeFrom Node            Link's origin node
+     * @param nodeTo   Node            Link's destination node
+     * @param link     Link            Link to add
      */
     public boolean addLink(Node nodeFrom, Node nodeTo, Link link) {
         try {
@@ -71,9 +71,10 @@ public class KnowledgeGraph {
 
     /**
      * Delete and adds a link to the graph
-     * @param nodeFrom          Node            Link's origin node
-     * @param nodeTo            Node            Link's destination node
-     * @param link              Link            Link to delete
+     *
+     * @param nodeFrom Node            Link's origin node
+     * @param nodeTo   Node            Link's destination node
+     * @param link     Link            Link to delete
      */
     public void removeLink(Node nodeFrom, Node nodeTo, Link link) {
         List<Link> links = nodeFrom.getLinks();
@@ -96,9 +97,10 @@ public class KnowledgeGraph {
 
     /**
      * Deletes the link in argument form the graph.
-     * @param linkToRemove      Link        link to remove
-     * @param deleteSameType    boolean     if true, all link of the same type as linkToRemove will be removed
-     * @return                              true if the link has been deleted
+     *
+     * @param linkToRemove   Link        link to remove
+     * @param deleteSameType boolean     if true, all link of the same type as linkToRemove will be removed
+     * @return true if the link has been deleted
      */
     public boolean removeLink(Link linkToRemove, boolean deleteSameType) {
         if (this.links.contains(linkToRemove)) {
@@ -117,7 +119,7 @@ public class KnowledgeGraph {
                 for (Link link : this.links) {
                     // the link will be removed if it has the same class
                     // as the one passed in parameter
-                    if ( link.getClass().isInstance(linkToRemove) ){
+                    if (link.getClass().isInstance(linkToRemove)) {
                         linksToRemove.add(link);
                     }
                 }
@@ -135,8 +137,9 @@ public class KnowledgeGraph {
 
     /**
      * Find all nodes in graph that matches the given properties
-     * @param properties        Map<>           Properties filter
-     * @return                                  Nodes matching the filter
+     *
+     * @param properties Map<>           Properties filter
+     * @return Nodes matching the filter
      */
     public List<Node> findNodes(Map<String, Property<?>> properties) {
         List<Node> found = new ArrayList<>();
@@ -164,8 +167,9 @@ public class KnowledgeGraph {
     /**
      * Find all nodes in graph that matches the given properties
      * for a given node type (instance)
-     * @param properties        Map<>           Properties filter
-     * @return                                  Nodes matching the filter
+     *
+     * @param properties Map<>           Properties filter
+     * @return Nodes matching the filter
      */
     public List<Node> findNodes(Map<String, Property<?>> properties, Class<? extends Node> nodeType) {
         List<Node> found = new ArrayList<>();
@@ -177,6 +181,7 @@ public class KnowledgeGraph {
 
     /**
      * Find a node according to its id
+     *
      * @param id Node ID
      * @return Corresponding node
      */
@@ -312,8 +317,9 @@ public class KnowledgeGraph {
 
     /**
      * Depth-First Search
-     * @param origin        Node from which we start
-     * @param occurred      Nodes we already ran through
+     *
+     * @param origin   Node from which we start
+     * @param occurred Nodes we already ran through
      */
     List<Node> dfs(Node origin, Node destination, List<Node> occurred) {
 

@@ -5,7 +5,6 @@ import model.KnowledgeGraph;
 import model.Property;
 import model.node.*;
 import model.link.*;
-import scala.collection.mutable.HashMap$;
 import utils.FileManager;
 import view.GraphDisplayer;
 
@@ -109,7 +108,7 @@ public class QueryInterpretor {
     private void switchGraph() {
         this.query = !this.query;
 
-        if (this.query){
+        if (this.query) {
             System.out.println("Switching to the query knowledge grah\n you can now enter your query items");
         } else {
             System.out.println("Switching to the knowledge grah\n you can now enter your data");
@@ -262,7 +261,7 @@ public class QueryInterpretor {
             return;
         }
 
-        Link link = null;
+        Link link;
         int nodeIdIndex = 2;
         if (args[1].equalsIgnoreCase("ako")) {
             link = new AkoLink();
@@ -290,11 +289,11 @@ public class QueryInterpretor {
         }
 
         Node firstNode = graph.findNode(args[nodeIdIndex]);
-        Node secondNode = graph.findNode(args[nodeIdIndex+1]);
+        Node secondNode = graph.findNode(args[nodeIdIndex + 1]);
 
         boolean deleteAll = false;
-        if (args.length >= nodeIdIndex+3) {
-            link.setName(args[nodeIdIndex+2]);
+        if (args.length >= nodeIdIndex + 3) {
+            link.setName(args[nodeIdIndex + 2]);
         } else {
             deleteAll = true;
         }
@@ -373,7 +372,7 @@ public class QueryInterpretor {
         return false;
     }
 
-    private static HashMap<String, Property<?>> getNextProperties (String[] args, int basePointer) {
+    private static HashMap<String, Property<?>> getNextProperties(String[] args, int basePointer) {
         if (args.length <= basePointer) {
             return null;
         }

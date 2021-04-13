@@ -82,24 +82,22 @@ public class QueryInterpretor {
         } else if (cmd.equals("switchGraph")) {
             switchGraph();
         } else if (cmd.equals("findQuery")) {
-            System.out.println("trying to find the patterns with the query Knowledge Graph ...");
-            if (query) {
-                GraphDisplayer.displayGraph(querygraph.search(graph));
-            } else {
-                GraphDisplayer.displayGraph(graph.search(querygraph));
-            }
+            System.out.println("Finding the patterns with the query Knowledge Graph ...");
+            GraphDisplayer.displayGraph((query) ? querygraph.search(graph) : graph.search(querygraph));
         } else if (cmd.equals("clear")) {
             if (query) {
                 graph = new KnowledgeGraph(false);
             } else {
                 querygraph = new KnowledgeGraph(false);
             }
-
-            System.out.println("Success : cleared query graph");
+            System.out.println("Successfully cleared query graph");
         } else if (cmd.equals("graph") && args[0].equals("export")) {
             exportGraph(args);
         } else if (cmd.equals("graph") && args[0].equals("import")) {
             importGraph(args);
+        } else if (cmd.equals("graph") && args[0].equals("path")) {
+            // WIP
+            System.out.println(graph.depthFirstSearch(graph.findNode(args[1]), graph.findNode(args[2]), new ArrayList<>()));
         } else if (cmd.equals("display")) {
             GraphDisplayer.displayGraph(graph);
         } else {
@@ -473,6 +471,7 @@ public class QueryInterpretor {
                 "clear",
                 "graph import <graphPath>",
                 "graph export <graphPath>",
+                "graph path <IDNode1> <IDNode2>",
                 "display",
                 "exit"
         };

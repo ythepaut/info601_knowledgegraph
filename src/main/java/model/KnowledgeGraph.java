@@ -365,7 +365,7 @@ public class KnowledgeGraph {
      * @param origin   Node from which we start
      * @param occurred Nodes we already ran through
      */
-    List<Node> depthFirstSearch(Node origin, Node destination, List<Node> occurred) {
+    public List<Node> depthFirstSearch(Node origin, Node destination, List<Node> occurred) {
 
         if (origin.equals(destination))
             return occurred;

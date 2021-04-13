@@ -17,7 +17,7 @@ public abstract class Node {
     /**
      * Next free ID
      */
-    private static int NEXT_ID = 0;
+    private static int nextId = 0;
 
     private final List<Link> links;
     private final Map<String, Property<?>> properties;
@@ -25,7 +25,7 @@ public abstract class Node {
     private final String id;
 
     public Node(Map<String, Property<?>> properties) {
-        this.id = Integer.toString(Node.NEXT_ID++);
+        this.id = Integer.toString(Node.nextId++);
         this.properties = properties;
         this.properties.put("id", new Property<>(this.id));
         this.links = new ArrayList<>();

@@ -46,6 +46,8 @@ public class Main {
         InstanceLink linkAntalgicMedoc = new InstanceLink();
         graph.addLink(antalgic, medoc, linkAntalgicMedoc);
 
+        // graph.removeLink(linkAntalgicMedoc); // test suppression
+
         return graph;
     }
 
@@ -56,10 +58,9 @@ public class Main {
 
         System.out.println(hardcodeGraph);
 
-        KnowledgeGraph graph = new KnowledgeGraph();
-        QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
-        queryInterpretor.queryListener();
-
+        // KnowledgeGraph graph = new KnowledgeGraph();
+        // QueryInterpretor queryInterpretor = new QueryInterpretor(graph);
+        // queryInterpretor.queryListener();
 
         /*Map<String, Property<?>> queryProperties = new HashMap<>();
         queryProperties.put("name", new Property<>("Doliprane"));

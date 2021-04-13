@@ -85,6 +85,28 @@ public class KnowledgeGraph {
     }
 
     /**
+     * Deletes a link to of the graph
+     * @param linkToRemove      Link        link to delete
+     * @return if the deletion has been successful
+     */
+    public boolean removeLink(Link linkToRemove) {
+        for (Link link : this.links) {
+            if (link.getId().equals(linkToRemove.getId())){
+
+                // node references deletion
+                linkToRemove.getFrom().removeLink(linkToRemove);
+                linkToRemove.getTo().removeLink(linkToRemove);
+
+                // global list deletion
+                this.links.remove(linkToRemove);
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Find all nodes in graph that matches the given properties
      * @param properties        Map<>           Properties filter
      * @return                                  Nodes matching the filter

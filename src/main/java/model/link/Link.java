@@ -11,6 +11,14 @@ import org.json.JSONObject;
  * Link
  */
 public abstract class Link {
+
+    /**
+     * Next free ID
+     */
+    private static int nextId = 0;
+
+    private final String id;
+
     /**
      * Origin node
      */
@@ -31,7 +39,10 @@ public abstract class Link {
      */
     private String name;
 
+
     protected Link(String name, boolean oriented) {
+        this.id = Integer.toString(Link.nextId++);
+
         if (name == null)
             throw new IllegalArgumentException("Link name cannot be null");
 
@@ -100,6 +111,10 @@ public abstract class Link {
     
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public boolean isOriented() {

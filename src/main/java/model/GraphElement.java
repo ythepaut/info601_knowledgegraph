@@ -1,7 +1,7 @@
 package model;
 
 public abstract class GraphElement {
-    private final boolean search;
+    private boolean search;
 
     protected GraphElement(boolean search) {
         this.search = search;
@@ -9,5 +9,9 @@ public abstract class GraphElement {
 
     public boolean isSearched() {
         return search;
+    }
+
+    public void setSearch(boolean search) {
+        this.search = search;
     }
 }

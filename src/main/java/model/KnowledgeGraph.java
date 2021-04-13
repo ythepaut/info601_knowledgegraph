@@ -411,9 +411,9 @@ public class KnowledgeGraph {
                     int weightB = weights[nodes.indexOf(nodeB)];
                     int weightAB = 1; // TODO change to put weight on links
 
-                    if ((weightB == -1 || weightB > weightA + weigthAB) && weightA != -1) {
+                    if ((weightB == -1 || weightB > weightA + weightAB) && weightA != -1) {
 
-                        weights[nodes.indexOf(nodeB)] = weightA + weigthAB;
+                        weights[nodes.indexOf(nodeB)] = weightA + weightAB;
 
                         pathsBy[nodes.indexOf(nodeB)] = shortestNodeA;
                     }

@@ -33,7 +33,6 @@ public abstract class Node {
         this.id = id;
         this.search = search;
         this.properties = properties;
-        this.properties.put("id", new Property<>(this.id));
         this.links = new ArrayList<>();
     }
 
@@ -103,15 +102,17 @@ public abstract class Node {
     }
 
     public String toDetailedString() {
-        String res = "";
+        StringBuilder res = new StringBuilder();
+
+        res.append("id : " + this.id + "\n");
 
         Object[] keys = this.properties.keySet().toArray();
         Object[] values = this.properties.values().toArray();
         for (int i = 0; i < keys.length; ++i) {
-            res += keys[i] + " : " + ((Property) values[i]).getValue() + "\n";
+            res.append(keys[i]).append(" : ").append(((Property<?>) values[i]).getValue()).append("\n");
         }
 
-        return res;
+        return res.toString();
     }
 
     public List<Link> getLinks() {
@@ -191,9 +192,13 @@ public abstract class Node {
     }
 
     public boolean isSubsetOf(Node other) {
-        for (String key : properties.keySet())
+        if (!this.getClass().isInstance(other))
+            return false;
+
+        for (String key : properties.keySet()) {
             if (other.properties.get(key) == null || !other.properties.get(key).equals(properties.get(key)))
                 return false;
+        }
 
         return true;
     }

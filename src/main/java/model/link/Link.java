@@ -11,6 +11,14 @@ import org.json.JSONObject;
  * Link
  */
 public abstract class Link {
+
+    /**
+     * Next free ID
+     */
+    private static int nextId = 0;
+
+    private final String id;
+
     /**
      * Origin node
      */
@@ -31,7 +39,10 @@ public abstract class Link {
      */
     private String name;
 
+
     protected Link(String name, boolean oriented) {
+        this.id = Integer.toString(Link.nextId++);
+
         if (name == null)
             throw new IllegalArgumentException("Link name cannot be null");
 
@@ -48,7 +59,7 @@ public abstract class Link {
     public abstract boolean isSameLink(Link other);
 
     /**
-     * Get a note depending of the other extremity
+     * Get a node depending of the other extremity
      * @param other Other node
      * @return Other extremity
      * @throws UninitializedLinkException When using an uninitialized link
@@ -100,6 +111,10 @@ public abstract class Link {
     
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public boolean isOriented() {

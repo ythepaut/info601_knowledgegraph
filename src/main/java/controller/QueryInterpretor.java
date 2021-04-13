@@ -64,6 +64,8 @@ public class QueryInterpretor {
             deleteNode(args);
         } else if (cmd.equals("node") && args[0].equals("find")) {
             findNode(args);
+        } else if (cmd.equals("node") && args[0].equals("list")) {
+            listNode();
         } else if (cmd.equals("link") && args[0].equals("add")) {
             addLink(args);
         } else if (cmd.equals("link") && args[0].equals("del")) {
@@ -141,6 +143,14 @@ public class QueryInterpretor {
         }
     }
 
+    private void listNode() {
+        System.out.println("All Nodes\n===================");
+        for (Node node : graph.getNodes()) {
+            System.out.print(node.toDetailedString());
+            System.out.println("===================");
+        }
+    }
+
     private void addLink(String[] args) {
         if (args.length < 4) {
             System.err.println("Syntax error. Use `link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]`");
@@ -190,16 +200,22 @@ public class QueryInterpretor {
     }
 
     private void deleteLink(String[] args) {
-        if (args.length < 3) {
+        if (args.length < 4) {
             System.err.println("Syntax error. Use `link del [LinkType] [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]`");
+            return;
         }
-        int nodeIdIndex = 2;
+
         Link link = null;
+        int nodeIdIndex = 2;
         if (args[1].equalsIgnoreCase("ako")) {
             link = new AkoLink();
         } else if (args[1].equalsIgnoreCase("association")) {
             link = new AssociationLink();
         } else if (args[1].equalsIgnoreCase("composition")) {
+            if (args.length < 5) {
+                System.out.println("Error: not enough arguments");
+                return;
+            }
             if (args[2].equalsIgnoreCase("oriented")) {
                 link = new CompositionLink(true);
             } else if (args[2].equalsIgnoreCase("nonoriented")) {
@@ -215,6 +231,33 @@ public class QueryInterpretor {
             System.err.println("Error: no valid TypeLink specified");
             return;
         }
+
+        Node firstNode = graph.findNode(args[nodeIdIndex]);
+        Node secondNode = graph.findNode(args[nodeIdIndex+1]);
+
+        boolean deleteAll = false;
+        if (args.length >= nodeIdIndex+3) {
+            link.setName(args[nodeIdIndex+2]);
+        } else {
+            deleteAll = true;
+        }
+
+        if (secondNode == null || firstNode == null) {
+            System.out.println("Error: no nodes corresponding");
+            return;
+        }
+
+        try {
+            link.setFrom(firstNode);
+            link.setTo(secondNode);
+        } catch (IllegalLinkAssociationException e) {
+            System.out.println("Error: illegal association");
+            return;
+        }
+
+        //TODO: lfkjgdlgfhjogidsfjghlkerjdfrsmlgvjxclkgjdflkgjfdjkgjfdlkgjfdlkjglkfdjglkfdjglkfdjtoirtpdspldù
+        //graph.todoLuchat();
+        System.out.println("Success deleted link between " + firstNode + " " + secondNode);
     }
 
     private void exportGraph(String[] args) {
@@ -276,8 +319,9 @@ public class QueryInterpretor {
                 "node add <NodeType> [Attribute name]:[Attribute value]",
                 "node del <ID> [Attribute1 name]:[Attribute1 value] [Attribute2 name]:[Attribute2 value]...",
                 "node find <ID> [Attribute1 name]:[Attribute1 value] [Attribute2 name]:[Attribute2 value]...",
+                "node list",
                 "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
-                "link del [LinkType] [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
+                "link del <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
                 "find ",
                 "display",
                 "exit"

@@ -1,26 +1,26 @@
 {
-  "nodes": [
-    {
-      "id": "50",
-      "type": "CONCEPT",
-      "content": {
-        "name": "Maladie"
-      }
-    },
-    {
-      "id": "51",
-      "type": "INSTANCE",
-      "search": true,
-      "content": {}
-    }
-  ],
-  "links": [
-    {
-      "name": "instance",
-      "from": "50",
-      "to": "51",
-      "oriented": true,
-      "type": "INSTANCE"
-    }
-  ]
+    "nodes": [
+        {
+            "id": "50",
+            "type": "CONCEPT",
+            "content": {
+                "name": "Maladie"
+            }
+        },
+        {
+            "id": "51",
+            "type": "INSTANCE",
+            "search": true,
+            "content": {}
+        }
+    ],
+    "links": [
+        {
+            "name": "instance",
+            "from": "50",
+            "to": "51",
+            "oriented": true,
+            "type": "INSTANCE"
+        }
+    ]
 }

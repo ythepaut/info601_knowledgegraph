@@ -100,7 +100,7 @@ public class QueryInterpretor {
             Node origin = graph.findNode(args[1]);
             Node destination = graph.findNode(args[2]);
             System.out.println("Recherche de " + origin + " à " + destination + "...");
-            System.out.println(graph.dijskra(origin, destination));
+            System.out.println(graph.dijkstra(origin, destination));
         } else if (cmd.equals("display")) {
             GraphDisplayer.displayGraph(graph);
         } else {
@@ -112,9 +112,9 @@ public class QueryInterpretor {
         this.query = !this.query;
 
         if (this.query) {
-            System.out.println("Switching to the query knowledge grah\n you can now enter your query items");
+            System.out.println("Switching to the query knowledge graph\n you can now enter your query items");
         } else {
-            System.out.println("Switching to the knowledge grah\n you can now enter your data");
+            System.out.println("Switching to the knowledge graph\n you can now enter your data");
         }
 
         KnowledgeGraph tmp = graph;

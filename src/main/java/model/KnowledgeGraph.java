@@ -375,12 +375,12 @@ public class KnowledgeGraph {
     }
 
     /**
-     * Dijskra's algorithm : Finds the shortest path between two nodes
+     * Dijkstra's algorithm : Finds the shortest path between two nodes
      * @param origin        Origin Node
      * @param destination   Destination Node
      * @return              List of the nodes to get from origin to destination
      */
-    public List<Node> dijskra(Node origin, Node destination) {
+    public List<Node> dijkstra(Node origin, Node destination) {
 
         // weight[i] représente le poids du noeud i (nodes[i]), -1 pour poids infini (par défaut)
         int[] weights = new int[nodes.size()];
@@ -417,20 +417,19 @@ public class KnowledgeGraph {
 
                     int weightA = weights[nodes.indexOf(shortestNodeA)];
                     int weightB = weights[nodes.indexOf(nodeB)];
-                    int weigthAB = 1; // TODO change to put weight on links
+                    int weightAB = 1; // TODO change to put weight on links
 
                     // Si poids du noeud courant > poids noeud le plus court + poids entre les deux noeuds
-                    if ((weightB == -1 || weightB > weightA + weigthAB) && weightA != -1) {
+                    if ((weightB == -1 || weightB > weightA + weightAB) && weightA != -1) {
 
                         // Affectation du nouveau poids du noeud B
-                        weights[nodes.indexOf(nodeB)] = weightA + weigthAB;
+                        weights[nodes.indexOf(nodeB)] = weightA + weightAB;
 
                         // Modification du prédecesseur de B, à A
                         pathsBy[nodes.indexOf(nodeB)] = shortestNodeA;
                     }
                 }
             }
-
 
         } while (complement.nodes.size() > 1);
 

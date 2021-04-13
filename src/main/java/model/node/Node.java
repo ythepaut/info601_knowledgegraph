@@ -217,10 +217,9 @@ public abstract class Node extends GraphElement {
         if (!getClass().isInstance(other))
             return false;
 
-        for (String key : properties.keySet()) {
+        for (String key : properties.keySet())
             if (other.properties.get(key) == null || !other.properties.get(key).equals(properties.get(key)))
                 return false;
-        }
 
         return true;
     }

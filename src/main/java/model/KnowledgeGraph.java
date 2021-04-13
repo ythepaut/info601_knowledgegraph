@@ -382,25 +382,19 @@ public class KnowledgeGraph {
      */
     public List<Node> dijskra(Node origin, Node destination) {
 
-        // weight[i] représente le poids du noeud i (nodes[i]), -1 pour poids infini (par défaut)
         int[] weights = new int[nodes.size()];
-        Arrays.fill(weights, -1);
+        Arrays.fill(weights, Integer.MAX_VALUE);
 
-        // pathsBy[i] représente le noeud par lequel le chemin est le plus court pour le noeud i
         Node[] pathsBy = new Node[nodes.size()];
 
-        // Sous-graph contenant les noeuds parcourus
         KnowledgeGraph sub = new KnowledgeGraph(inherit);
 
-        // Initialisation du coût à l'origine à 0 (weight[origine] = 0)
         weights[nodes.indexOf(origin)] = 0;
 
-        // Tant qu'il existe un noeud qui n'est pas présent dans le sous graph sub
         KnowledgeGraph complement;
         do {
             complement = complement(this, sub);
 
-            // Cherche le noeud de plus petite distance qui n'est pas dans sub
             int nodeIndex = -1;
             for (int i = 0 ; i < weights.length ; ++i)
                 if (!sub.nodes.contains(nodes.get(i)))
@@ -408,10 +402,8 @@ public class KnowledgeGraph {
                         nodeIndex = i;
             Node shortestNodeA = nodes.get(nodeIndex);
 
-            // Ajout du noeud le plus "court" dans le sous graph
             sub.addNodes(shortestNodeA);
 
-            // Pour tous les sommets voisins du noeud le plus court, sauf les noeuds dans le sous graph sub
             for (Node nodeB : shortestNodeA.getNeighbours()) {
                 if (!sub.nodes.contains(nodeB)) {
 
@@ -419,13 +411,10 @@ public class KnowledgeGraph {
                     int weightB = weights[nodes.indexOf(nodeB)];
                     int weigthAB = 1; // TODO change to put weight on links
 
-                    // Si poids du noeud courant > poids noeud le plus court + poids entre les deux noeuds
                     if ((weightB == -1 || weightB > weightA + weigthAB) && weightA != -1) {
 
-                        // Affectation du nouveau poids du noeud B
                         weights[nodes.indexOf(nodeB)] = weightA + weigthAB;
 
-                        // Modification du prédecesseur de B, à A
                         pathsBy[nodes.indexOf(nodeB)] = shortestNodeA;
                     }
                 }
@@ -434,12 +423,11 @@ public class KnowledgeGraph {
 
         } while (complement.nodes.size() > 1);
 
-        // Debug : Affichage de tous les noeuds avec les poids et chemins
+        // Debug
         for (int i = 0 ; i < weights.length ; ++i) {
-            System.err.println(nodes.get(i) + "\t\t : " + weights[i] + "\t\t\tby " + (pathsBy[i] != null ? pathsBy[i] : "-"));
+            //System.err.println(nodes.get(i) + "\t\t : " + weights[i] + "\t\t\tby " + (pathsBy[i] != null ? pathsBy[i] : "-"));
         }
 
-        // Construction du chemin
         List<Node> path = new ArrayList<>();
         Node currentNode = destination;
         do {

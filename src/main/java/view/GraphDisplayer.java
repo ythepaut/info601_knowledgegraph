@@ -57,8 +57,9 @@ public class GraphDisplayer {
                 if (link.getFrom().equals(node)) {
                     Node from = link.getFrom();
                     Node to = link.getTo();
-                    Edge edge = result.addEdge(from.getId() + "-" + to.getId(), resultNodes.get(from.getId()), resultNodes.get(to.getId()));
+                    Edge edge = result.addEdge(from.getId() + "-" + to.getId(), resultNodes.get(from.getId()), resultNodes.get(to.getId()), link.isOriented());
                     edge.setAttribute("ui.class", link.getName());
+                    edge.setAttribute("ui.label", link.toString());
                 }
             }
         }
@@ -84,11 +85,26 @@ public class GraphDisplayer {
 
         String edgeCSS = "" +
                 "edge {" +
+                "   text-background-mode: plain;" +
+                "   text-alignment: along;" +
                 "   arrow-shape: arrow;" +
                 "}" +
                 "" +
-                "edge.instance {" + // TODO: untested
+                "edge.instance {" +
                 "   stroke-mode: dashes;" +
+                "}" +
+                "" +
+                "edge.ako {" +
+                "   stroke-mode: plain;" +
+                "}" +
+                "" +
+                "edge.association {" +
+                "   stroke-mode: plain;" +
+                "   stroke-color: #888;" +
+                "}" +
+                "" +
+                "edge.composition {" +
+                "   stroke-mode: dots;" +
                 "}";
 
         return nodeCSS + edgeCSS;

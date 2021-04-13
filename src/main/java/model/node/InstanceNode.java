@@ -11,7 +11,11 @@ public class InstanceNode extends Node {
     }
 
     protected InstanceNode(Map<String, Property<?>> properties, String id) {
-        super(properties, id);
+        this(properties, id, false);
+    }
+
+    protected InstanceNode(Map<String, Property<?>> properties, String id, boolean search) {
+        super(properties, id, search);
     }
 
     @Override

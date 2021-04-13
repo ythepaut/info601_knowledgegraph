@@ -77,9 +77,9 @@ public abstract class Link {
         if (other == null)
             throw new IllegalArgumentException("Other node cannot be null");
 
-        if (other == from)
+        if (other.equals(from))
             return to;
-        else if (other == to)
+        else if (other.equals(to))
             return from;
         else
             throw new NoLinkedNodeException("No other node");

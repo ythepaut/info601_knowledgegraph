@@ -47,7 +47,7 @@ public class KnowledgeGraph {
      * @param nodeTo            Node            Link's destination node
      * @param link              Link            Link to add
      */
-    public void addLink(Node nodeFrom, Node nodeTo, Link link) {
+    public boolean addLink(Node nodeFrom, Node nodeTo, Link link) {
         try {
             link.setFrom(nodeFrom);
             link.setTo(nodeTo);
@@ -55,8 +55,10 @@ public class KnowledgeGraph {
             nodeFrom.addLink(link);
             addNodes(nodeFrom, nodeTo);
             links.add(link);
+            return true;
         } catch (IllegalLinkAssociationException e) {
-            e.printStackTrace();
+            System.out.println("Error: illegal association");
+            return false;
         }
     }
 
@@ -66,13 +68,13 @@ public class KnowledgeGraph {
      * @param nodeTo            Node            Link's destination node
      * @param linkType          Class           Link type to delete
      */
-    public void removeLink(Node nodeFrom, Node nodeTo, Class<? extends Link> linkType) {
+    public void removeLink(Node nodeFrom, Node nodeTo, Link link) {
         List<Link> links = nodeFrom.getLinks();
         Link myLink = null;
-        for (Link link : links) {
-            if (link.getClass() == linkType) {
+        for (Link linkList : links) {
+            if (linkList.getClass() == link.getClass() && linkList == link) {
                 try {
-                    if (link.getLinkedNode(nodeFrom) == nodeTo) {
+                    if (linkList.getLinkedNode(nodeFrom) == nodeTo) {
                         myLink = link;
                     }
                 } catch (NoLinkedNodeException e) {

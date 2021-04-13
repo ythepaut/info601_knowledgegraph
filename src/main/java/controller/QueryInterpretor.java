@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.IllegalLinkAssociationException;
 import model.KnowledgeGraph;
 import model.Property;
 import model.node.*;
@@ -93,12 +94,16 @@ public class QueryInterpretor {
 
             System.out.println("Deleted " + nodes.size() + " node(s).");
         } else if (cmd.equals("node") && args[0].equals("find")) {
-            HashMap<String, Property<?>> properties = new HashMap<>();
-            getNextProperties(properties, args, 1);
+            List<Node> nodes = new ArrayList<Node>();
+            if (args[1].split(":").length != 2) {
+                nodes.add(graph.findNode(args[1]));
+            } else {
+                HashMap<String, Property<?>> properties = new HashMap<>();
+                getNextProperties(properties, args, 1);
+                nodes = graph.findNodes(properties, Node.class);
+            }
 
-            List<Node> nodes = graph.findNodes(properties);
-
-            if (nodes != null && nodes.size() > 0) {
+            if (nodes != null && nodes.size() > 0 && nodes.get(0) != null) {
                 System.out.println("Corresponding Nodes\n===================");
                 for (int i = 0; i < nodes.size(); i++) {
                     System.out.print(nodes.get(i).toDetailedString());
@@ -108,6 +113,55 @@ public class QueryInterpretor {
                 System.out.println("Error: no corresponding node found");
             }
         } else if (cmd.equals("link") && args[0].equals("add")) {
+            if (args.length < 4) {
+                System.out.println("Error: not enough arguments");
+                return;
+            }
+            int nodeIdIndex = 2;
+            Link link = null;
+            if (args[1].equalsIgnoreCase("ako")) {
+                link = new AkoLink();
+            } else if (args[1].equalsIgnoreCase("association")) {
+                link = new AssociationLink();
+            } else if (args[1].equalsIgnoreCase("composition")) {
+                if (args[2].equalsIgnoreCase("oriented")) {
+                    link = new CompositionLink(true);
+                } else if (args[2].equalsIgnoreCase("nonoriented")) {
+                    link = new CompositionLink(false);
+                } else {
+                    System.out.println("Error: no orientation specified");
+                    return;
+                }
+                if (args.length < 5) {
+                    System.out.println("Error: not enough arguments");
+                    return;
+                }
+                nodeIdIndex++;
+            } else if (args[1].equalsIgnoreCase("instance")) {
+                link = new InstanceLink();
+            } else {
+                System.out.println("Error: no valid TypeLink specified");
+                return;
+            }
+
+            Node firstNode = graph.findNode(args[nodeIdIndex]);
+            Node secondNode = graph.findNode(args[nodeIdIndex+1]);
+
+            if (args.length > nodeIdIndex+2) {
+                link.setName(args[nodeIdIndex+2]);
+            }
+
+            if (firstNode == null || secondNode == null) {
+                System.out.println("Error: no corresponding nodes found");
+            } else {
+                if (graph.addLink(firstNode, secondNode, link)) {
+                    System.out.println("Success adding link between " + firstNode + " " + secondNode);
+                }
+            }
+        } else if (cmd.equals("link") && args[0].equals("del")) {
+            if (args.length < 3) {
+                System.out.println("Error: not enough arguments");
+            }
             int nodeIdIndex = 2;
             Link link = null;
             if (args[1].equalsIgnoreCase("ako")) {
@@ -130,19 +184,6 @@ public class QueryInterpretor {
                 System.out.println("Error: no valid TypeLink specified");
                 return;
             }
-
-            Node firstNode = graph.findNode(args[nodeIdIndex]);
-            Node secondNode = graph.findNode(args[nodeIdIndex+1]);
-
-            if (firstNode == null || secondNode == null) {
-                System.out.println("Error: no corresponding nodes found");
-            } else {
-                System.out.println("Success adding link between " + firstNode + " " + secondNode);
-                graph.addLink(firstNode, secondNode, link);
-            }
-
-        } else if (cmd.equals("link") && args[0].equals("del")) {
-
         } else if (cmd.equals("display")) {
             GraphDisplayer.displayGraph(graph);
         } else {
@@ -185,8 +226,9 @@ public class QueryInterpretor {
                 "node add <NodeType> [Attribute name]:[Attribute value]",
                 "node del <ID> | [Attribute name]:[Attribute value]",
                 "node find <ID> | [Attribute name]:[Attribute value]",
-                "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkProperties]",
-                "link del <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkProperties]",
+                "link add <LinkType> [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
+                "link del [LinkType] [Link Mandatory Property] <IDNode1> <IDNode2> [LinkName]",
+                "find HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                 "display",
                 "exit"
         };

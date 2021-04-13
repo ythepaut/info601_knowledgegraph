@@ -51,10 +51,10 @@ public class Main {
 
     public static void main(String[] args) {
 
-        KnowledgeGraph hardcodeGraph = constructGraph();
+        //KnowledgeGraph hardcodeGraph = constructGraph();
         // GraphDisplayer.displayGraph(hardcodeGraph);
 
-        System.out.println(hardcodeGraph);
+        //System.out.println(hardcodeGraph);
 
         KnowledgeGraph graph = new KnowledgeGraph();
         QueryInterpretor queryInterpretor = new QueryInterpretor(graph);

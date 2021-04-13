@@ -1,5 +1,6 @@
 package model.node;
 
+import model.GraphElement;
 import model.Property;
 import model.link.Link;
 import org.json.JSONException;
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * Node
  */
-public abstract class Node {
+public abstract class Node extends GraphElement {
     /**
      * Next free ID
      */
@@ -23,15 +24,14 @@ public abstract class Node {
     private final Map<String, Property<?>> properties;
 
     private final String id;
-    private final boolean search;
 
     public Node(Map<String, Property<?>> properties) {
         this(properties, Integer.toString(Node.NEXT_ID++), false);
     }
 
     public Node(Map<String, Property<?>> properties, String id, boolean search) {
+        super(search);
         this.id = id;
-        this.search = search;
         this.properties = properties;
         this.links = new ArrayList<>();
     }
@@ -226,9 +226,5 @@ public abstract class Node {
 
     public static void setNextId(int nextId) {
         NEXT_ID = nextId;
-    }
-
-    public boolean isSearched() {
-        return search;
     }
 }

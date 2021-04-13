@@ -3,6 +3,7 @@ package model.link;
 import exceptions.IllegalLinkAssociationException;
 import exceptions.NoLinkedNodeException;
 import exceptions.UninitializedLinkException;
+import model.GraphElement;
 import model.node.Node;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +11,7 @@ import org.json.JSONObject;
 /**
  * Link
  */
-public abstract class Link {
+public abstract class Link extends GraphElement {
 
     /**
      * Next free ID
@@ -39,8 +40,12 @@ public abstract class Link {
      */
     private String name;
 
-
     protected Link(String name, boolean oriented) {
+        this(name, oriented, false);
+    }
+
+    protected Link(String name, boolean oriented, boolean search) {
+        super(search);
         this.id = Integer.toString(Link.nextId++);
 
         if (name == null)
@@ -155,6 +160,21 @@ public abstract class Link {
     @Override
     public String toString() {
         return name;
+    }
+
+    public String toDetailedString(Node from) {
+        String res = "";
+
+        if (from != null) {
+            res += "name : " + name;
+            try {
+                res += " to : " + getLinkedNode(from).getId();
+            } catch (NoLinkedNodeException e) {}
+        } else {
+            res += "from : " + this.from.getId() + " name : " + name + "to : " + this.to.getId();
+        }
+
+        return res;
     }
 
     /**

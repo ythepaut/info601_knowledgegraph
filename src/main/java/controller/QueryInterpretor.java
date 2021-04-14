@@ -82,7 +82,7 @@ public class QueryInterpretor {
         } else if (cmd.equals("switchGraph")) {
             switchGraph();
         } else if (cmd.equals("findQuery")) {
-            System.out.println("Finding the patterns with the query Knowledge Graph ...");
+            System.out.println("Finding the patterns with the query Knowledge Graph...");
             GraphDisplayer.displayGraph((query) ? querygraph.search(graph) : graph.search(querygraph));
         } else if (cmd.equals("clear")) {
             if (query) {
@@ -112,9 +112,9 @@ public class QueryInterpretor {
         this.query = !this.query;
 
         if (this.query) {
-            System.out.println("Switching to the query knowledge graph\n you can now enter your query items");
+            System.out.println("Switching to the query knowledge graph\nYou can now enter your query items");
         } else {
-            System.out.println("Switching to the knowledge graph\n you can now enter your data");
+            System.out.println("Switching to the knowledge graph\nYou can now enter your data");
         }
 
         KnowledgeGraph tmp = graph;
@@ -168,7 +168,7 @@ public class QueryInterpretor {
                 graph.removeNodes(node);
             }
         } else {
-            System.err.println("Error: no suitable nodes found " + nodes.size());
+            System.err.println("Error: no suitable nodes found: " + nodes.size());
             return;
         }
 
@@ -191,13 +191,13 @@ public class QueryInterpretor {
         }
 
         if (nodes != null && nodes.size() > 0 && nodes.get(0) != null) {
-            System.out.println("Corresponding Nodes\n===================");
+            System.out.println("Corresponding nodes\n===================");
             for (Node node : nodes) {
                 System.out.print(node.toDetailedString());
                 System.out.println("===================");
             }
         } else {
-            System.err.println("Error: no corresponding node found");
+            System.err.println("Error: no corresponding nodes found");
         }
     }
 
@@ -253,7 +253,7 @@ public class QueryInterpretor {
             System.err.println("Error: no corresponding nodes found");
         } else {
             if (graph.addLink(firstNode, secondNode, link)) {
-                System.out.println("Successfully added link between " + firstNode + " " + secondNode);
+                System.out.println("Successfully added link between " + firstNode + " and " + secondNode);
             }
         }
     }
@@ -302,7 +302,7 @@ public class QueryInterpretor {
         }
 
         if (secondNode == null || firstNode == null) {
-            System.out.println("Error: no nodes corresponding");
+            System.out.println("Error: no corresponding nodes");
             return;
         }
 
@@ -316,9 +316,9 @@ public class QueryInterpretor {
 
         // FIXME the link id does not exists in model
         if (graph.removeLink(link, deleteAll)) {
-            System.out.println("Success deleted link between " + firstNode + " " + secondNode);
+            System.out.println("Success, deleted link between " + firstNode + " and " + secondNode);
         } else {
-            System.err.println("Error : unsuccessful link deletion " + firstNode + " " + secondNode);
+            System.err.println("Error: unsuccessful link deletion between " + firstNode + " and " + secondNode);
         }
     }
 
@@ -367,13 +367,13 @@ public class QueryInterpretor {
             link.setFrom(firstNode);
             link.setTo(secondNode);
         } catch (IllegalLinkAssociationException e) {
-            System.err.println("Error : link cannot exist illegal association");
+            System.err.println("Error: illegal association, link cannot exist");
             return;
         }
 
         List<Link> links = graph.findLinks(link);
         if (links.size() == 0) {
-            System.err.println("Error : no corresponding link found");
+            System.err.println("Error: no corresponding link found");
         } else {
             System.out.println("Links found\n===================");
             for (Link linkPrint : links) {
@@ -458,7 +458,7 @@ public class QueryInterpretor {
 
     private static void printHelp() {
         String[] helpString = {
-                "Query help :",
+                "Query help:",
                 "",
                 "help",
                 "node add <NodeType> [Attribute name]:[Attribute value]",
